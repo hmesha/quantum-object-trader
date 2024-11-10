@@ -22,3 +22,7 @@ risk_management:
   max_position_size: 100  # Maximum position size
   daily_loss_limit: 1000  # Daily loss limit
   max_trade_frequency: 10  # Maximum trade frequency
+
+# CLI Configuration
+cli:
+  refresh_interval: 5  # Refresh interval in seconds
