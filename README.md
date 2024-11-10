@@ -61,8 +61,6 @@ Create a `.env` file in the root directory of the project:
 
 ```sh
 # .env file
-IB_API_KEY=your_interactive_brokers_api_key
-IB_API_SECRET=your_interactive_brokers_api_secret
 GOOGLE_NEWS_API_KEY=your_google_news_api_key
 TWITTER_API_KEY=your_twitter_api_key
 TWITTER_API_SECRET=your_twitter_api_secret
