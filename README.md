@@ -52,7 +52,7 @@ conda activate trading_bot
 3. Install dependencies:
 
 ```sh
-pip install -r ./requirements/requirements.txt
+pip install -r requirements.txt
 ```
 
 4. Set up environment variables:
@@ -85,6 +85,23 @@ For detailed information on the trading bot's architecture, setup, and usage, re
 - [API Documentation](./docs/api_documentation.md)
 - [Architecture Documentation](./docs/architecture_documentation.md)
 - [Troubleshooting Guide](./docs/troubleshooting_guide.md)
+- [Technical Analysis Documentation](./docs/technical_analysis.md)
+
+## Unit Tests
+
+The `tests` directory contains unit tests for various components of the trading bot. To run the tests, use the following command:
+
+```sh
+python -m unittest discover tests
+```
+
+## API Integration
+
+The `src/api/ib_connector.py` file is responsible for the Interactive Brokers TWS API integration. It handles the connection, error handling, and rate limit monitoring.
+
+## Real-time Dashboard
+
+The `src/cli/dashboard.py` file is responsible for the real-time dashboard display. It provides a color-coded CLI interface for monitoring live trading operations.
 
 ## Contributing
 
