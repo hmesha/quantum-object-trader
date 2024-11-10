@@ -64,9 +64,15 @@ Create a `.env` file in the root directory of the project:
 NEWS_API_KEY=your_news_api_key
 ```
 
-5. Configure the bot:
+5. Create the `config` directory:
 
-Modify the configuration files in the `./config` folder according to your requirements.
+```sh
+mkdir src/config
+```
+
+6. Configure the bot:
+
+Modify the configuration files in the `src/config` folder according to your requirements.
 
 ## Usage
 
