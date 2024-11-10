@@ -1,6 +1,6 @@
 import argparse
 from src.trading.trading_logic import TradingLogic
-from src.config.config import config
+import yaml
 
 def main():
     parser = argparse.ArgumentParser(description="Trading Bot CLI")
@@ -10,6 +10,9 @@ def main():
     parser.add_argument("--price", type=float, help="Price for limit/stop orders")
 
     args = parser.parse_args()
+
+    with open('src/config/config.yaml', 'r') as file:
+        config = yaml.safe_load(file)
 
     trading_logic = TradingLogic(config)
 

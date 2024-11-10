@@ -1,7 +1,10 @@
 import time
 from colorama import Fore, Style, init
 from src.trading.trading_logic import TradingLogic
-from src.config.config import config
+import yaml
+
+with open('src/config/config.yaml', 'r') as file:
+    config = yaml.safe_load(file)
 
 class Dashboard:
     def __init__(self):
