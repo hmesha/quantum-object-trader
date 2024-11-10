@@ -26,7 +26,7 @@ class TradingLogic:
             self.logger.error("Price must be specified for limit/stop orders")
             return
 
-        trade = self.api_connector.place_order(symbol, order_type, quantity, price)
+        trade = self.api_connector.placeOrder(symbol, order_type, quantity, price)
         if trade:
             self.logger.info(f"Trade executed: {trade}")
         else:
