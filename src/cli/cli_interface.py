@@ -1,6 +1,6 @@
 import argparse
 from src.trading.trading_logic import TradingLogic
-from src.config import config
+from src.config.config import config
 
 def main():
     parser = argparse.ArgumentParser(description="Trading Bot CLI")
