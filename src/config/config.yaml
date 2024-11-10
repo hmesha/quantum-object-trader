@@ -2,21 +2,23 @@ api:
   tws_endpoint: "127.0.0.1"
   port: 7497
 
+# Technical Analysis Configuration
 technical_analysis:
-  sma_period: 20
-  ema_period: 20
-  vwap_period: 14
-  rsi_period: 14
-  macd_fast_period: 12
-  macd_slow_period: 26
-  macd_signal_period: 9
-  bollinger_bands_period: 20
-  bollinger_bands_std_dev: 2
-  atr_period: 14
-  adx_period: 14
-  cci_period: 20
+  sma_period: 20  # Simple Moving Average period
+  ema_period: 20  # Exponential Moving Average period
+  vwap_period: 14  # Volume Weighted Average Price period
+  rsi_period: 14  # Relative Strength Index period
+  macd_fast_period: 12  # MACD fast EMA period
+  macd_slow_period: 26  # MACD slow EMA period
+  macd_signal_period: 9  # MACD signal line period
+  bollinger_bands_period: 20  # Bollinger Bands SMA period
+  bollinger_bands_std_dev: 2  # Bollinger Bands standard deviation
+  atr_period: 14  # Average True Range period
+  adx_period: 14  # Average Directional Index period
+  cci_period: 20  # Commodity Channel Index period
 
+# Risk Management Configuration
 risk_management:
-  max_position_size: 100
-  daily_loss_limit: 1000
-  max_trade_frequency: 10
+  max_position_size: 100  # Maximum position size
+  daily_loss_limit: 1000  # Daily loss limit
+  max_trade_frequency: 10  # Maximum trade frequency
