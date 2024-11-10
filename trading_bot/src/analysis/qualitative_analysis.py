@@ -3,26 +3,26 @@ import logging
 from textblob import TextBlob
 
 class QualitativeAnalysis:
-    def __init__(self, google_news_api_key, twitter_api_key, twitter_api_secret):
-        self.google_news_api_key = google_news_api_key
+    def __init__(self, news_api_key, twitter_api_key, twitter_api_secret):
+        self.news_api_key = news_api_key
         self.twitter_api_key = twitter_api_key
         self.twitter_api_secret = twitter_api_secret
         self.logger = logging.getLogger(__name__)
 
-    def fetch_google_news(self, query):
+    def fetch_news(self, query):
         """
-        Fetch news articles from Google News API.
+        Fetch news articles from NewsAPI.org.
 
         :param query: The search query for news articles
         :return: JSON response containing news articles
         """
-        url = f"https://newsapi.org/v2/everything?q={query}&apiKey={self.google_news_api_key}"
+        url = f"https://newsapi.org/v2/everything?q={query}&apiKey={self.news_api_key}"
         try:
             response = requests.get(url)
             response.raise_for_status()
             return response.json()
         except requests.exceptions.RequestException as e:
-            self.logger.error(f"Error fetching Google News: {e}")
+            self.logger.error(f"Error fetching news: {e}")
             return None
 
     def fetch_twitter_data(self, query):
@@ -82,7 +82,7 @@ class QualitativeAnalysis:
         :param query: The search query for news and tweets
         :return: Aggregated sentiment score
         """
-        news_data = self.fetch_google_news(query)
+        news_data = self.fetch_news(query)
         twitter_data = self.fetch_twitter_data(query)
         sentiment_score = self.aggregate_sentiment(news_data, twitter_data)
         return sentiment_score
@@ -126,7 +126,7 @@ class QualitativeAnalysis:
         :param company_symbol: The stock symbol of the company
         :return: Aggregated sentiment score
         """
-        news_data = self.fetch_google_news(query)
+        news_data = self.fetch_news(query)
         twitter_data = self.fetch_twitter_data(query)
         sec_filings = self.fetch_sec_filings(company_symbol)
         sentiment_score = self.aggregate_sentiment(news_data, twitter_data)

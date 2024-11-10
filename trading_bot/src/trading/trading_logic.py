@@ -15,7 +15,7 @@ class TradingLogic:
         )
         self.technical_analysis = TechnicalAnalysis()
         self.qualitative_analysis = QualitativeAnalysis(
-            config['qualitative_analysis']['google_news_api_key'],
+            config['qualitative_analysis']['news_api_key'],
             config['qualitative_analysis']['twitter_api_key'],
             config['qualitative_analysis']['twitter_api_secret']
         )

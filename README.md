@@ -61,7 +61,7 @@ Create a `.env` file in the root directory of the project:
 
 ```sh
 # .env file
-GOOGLE_NEWS_API_KEY=your_google_news_api_key
+NEWS_API_KEY=ea19f8ff137e4480a77417d19782a94d
 TWITTER_API_KEY=your_twitter_api_key
 TWITTER_API_SECRET=your_twitter_api_secret
 ```

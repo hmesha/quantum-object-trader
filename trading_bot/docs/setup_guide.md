@@ -51,9 +51,7 @@ Set up the required environment variables for API keys and secrets. You can crea
 
 ```sh
 # .env file
-IB_API_KEY=your_interactive_brokers_api_key
-IB_API_SECRET=your_interactive_brokers_api_secret
-GOOGLE_NEWS_API_KEY=your_google_news_api_key
+NEWS_API_KEY=ea19f8ff137e4480a77417d19782a94d
 TWITTER_API_KEY=your_twitter_api_key
 TWITTER_API_SECRET=your_twitter_api_secret
 ```
