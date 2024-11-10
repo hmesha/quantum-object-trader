@@ -2,13 +2,19 @@ from ibapi.client import EClient
 from ibapi.wrapper import EWrapper
 from threading import Thread
 import time
+import yaml
 
 class IBClient(EWrapper, EClient):
 
-    def __init__(self, host, port, client_id):
+    def __init__(self, config):
         EClient.__init__(self, self)
 
-        self.connect(host, port, client_id)
+        self.config = config
+        self.host = self.config['api']['tws_endpoint']
+        self.port = self.config['api']['port']
+        self.client_id = 1
+
+        self.connect(self.host, self.port, self.client_id)
 
         thread = Thread(target=self.run)
         thread.start()
@@ -18,12 +24,6 @@ class IBClient(EWrapper, EClient):
             print(msg)
         else:
             print('Error {}: {}'.format(code, msg))
-
-    def connect(self, host, port, client_id):
-        try:
-            super().connect(host, port, client_id)
-        except Exception as e:
-            print(f"Failed to connect to TWS API: {e}")
 
     def run(self):
         while self.isConnected():
@@ -37,4 +37,7 @@ class IBClient(EWrapper, EClient):
         # Placeholder for rate limit monitoring logic
         pass
 
-client = IBClient('127.0.0.1', 7497, 1)
+if __name__ == "__main__":
+    with open('trading_bot/config/config_dev.yaml', 'r') as file:
+        config = yaml.safe_load(file)
+    client = IBClient(config)

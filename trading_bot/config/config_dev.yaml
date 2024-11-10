@@ -7,9 +7,10 @@ general:
 
 # API settings
 api:
-  base_url: https://api.sandbox.interactivebrokers.com
   reconnect_attempts: 5
   reconnect_backoff: 2
+  tws_endpoint: 127.0.0.1
+  port: 7497
 
 # Data settings
 data:
