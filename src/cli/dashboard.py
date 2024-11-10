@@ -1,7 +1,7 @@
 import time
 from colorama import Fore, Style, init
 from src.trading.trading_logic import TradingLogic
-from src.config import config
+from src.config.config import config
 
 class Dashboard:
     def __init__(self):
