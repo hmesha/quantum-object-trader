@@ -79,7 +79,7 @@ Modify the configuration files in the `src/config` folder according to your requ
 You can run the trading bot using the CLI interface. For example, to execute a market order to buy 10 shares of AAPL, use the following command:
 
 ```sh
-python -m trading_bot.src.cli.cli_interface --symbol AAPL --order_type market --quantity 10
+python -m src.cli.cli_interface --symbol AAPL --order_type market --quantity 10
 ```
 
 ## Documentation
