@@ -5,6 +5,7 @@ from colorama import Fore, Style, init
 from trading_bot.src.trading.trading_logic import TradingLogic
 from trading_bot.config.config import config
 
+
 class CLIInterface:
     def __init__(self):
         self.trading_logic = TradingLogic(config)
@@ -46,6 +47,7 @@ class CLIInterface:
             self.logger.error("Risk management rules violated. Trade not executed.")
 
         self.display_dashboard()
+
 
 if __name__ == "__main__":
     cli = CLIInterface()

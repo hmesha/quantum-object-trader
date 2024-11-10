@@ -6,9 +6,8 @@ The architecture of the trading bot is designed to be modular, scalable, and mai
 
 1. **API Connector**: Handles the connection to the Interactive Brokers TWS API.
 2. **Technical Analysis**: Performs technical analysis on market data.
-3. **Qualitative Analysis**: Integrates qualitative data sources and performs sentiment analysis.
-4. **Trading Logic**: Implements the trading strategies and risk management rules.
-5. **CLI Interface**: Provides a command-line interface for user interaction.
+3. **Trading Logic**: Implements the trading strategies and risk management rules.
+4. **CLI Interface**: Provides a command-line interface for user interaction.
 
 ## Component Details
 
@@ -34,23 +33,15 @@ The `TechnicalAnalysis` class provides various technical indicators used for tra
 
 The class is designed to be modular, allowing for easy addition of new indicators.
 
-### 3. Qualitative Analysis
+### 3. Trading Logic
 
-The `QualitativeAnalysis` class integrates data from various qualitative sources such as Google News and Twitter. It performs sentiment analysis on the data to provide a sentiment score that can be used in trading decisions.
-
-- **Data Sources**: Google News API, Twitter API, Company SEC filings, Financial news APIs.
-- **Sentiment Analysis**: Uses Natural Language Processing (NLP) techniques to analyze the sentiment of news articles and tweets.
-- **Aggregation**: Aggregates sentiment scores from different sources to provide a comprehensive sentiment score.
-
-### 4. Trading Logic
-
-The `TradingLogic` class implements the core trading strategies and risk management rules. It interacts with the `APIConnector`, `TechnicalAnalysis`, and `QualitativeAnalysis` classes to make informed trading decisions.
+The `TradingLogic` class implements the core trading strategies and risk management rules. It interacts with the `APIConnector` and `TechnicalAnalysis` classes to make informed trading decisions.
 
 - **Order Management**: Handles the placement, modification, and cancellation of orders.
 - **Risk Management**: Implements risk management rules such as maximum position size, daily loss limits, and volatility-based position sizing.
 - **Trade Execution**: Executes trades based on the combined signals from technical and qualitative analysis.
 
-### 5. CLI Interface
+### 4. CLI Interface
 
 The `CLIInterface` class provides a command-line interface for user interaction. It allows users to monitor the trading bot's performance and make trading decisions in real-time.
 
@@ -65,10 +56,9 @@ The data flow in the trading bot is as follows:
 
 1. **Market Data**: The `APIConnector` subscribes to real-time market data and stores it in a data buffer.
 2. **Technical Analysis**: The `TechnicalAnalysis` class processes the market data to generate technical signals.
-3. **Qualitative Analysis**: The `QualitativeAnalysis` class fetches qualitative data and performs sentiment analysis to generate qualitative signals.
-4. **Trading Logic**: The `TradingLogic` class combines the technical and qualitative signals to make trading decisions and manage risk.
-5. **Order Execution**: The `APIConnector` places orders based on the trading decisions made by the `TradingLogic` class.
-6. **Monitoring**: The `CLIInterface` displays real-time performance metrics and status indicators to the user.
+3. **Trading Logic**: The `TradingLogic` class combines the technical signals to make trading decisions and manage risk.
+4. **Order Execution**: The `APIConnector` places orders based on the trading decisions made by the `TradingLogic` class.
+5. **Monitoring**: The `CLIInterface` displays real-time performance metrics and status indicators to the user.
 
 ## Error Handling
 
@@ -76,7 +66,7 @@ The trading bot includes comprehensive error handling mechanisms to ensure robus
 
 - **Connection Errors**: The `APIConnector` handles connection errors by attempting to reconnect automatically with exponential backoff.
 - **API Request Errors**: The `APIConnector` handles API request errors by logging the errors and retrying the requests if necessary.
-- **Data Gaps**: The `TechnicalAnalysis` and `QualitativeAnalysis` classes handle data gaps and inconsistencies by using fallback mechanisms and logging the issues.
+- **Data Gaps**: The `TechnicalAnalysis` class handles data gaps and inconsistencies by using fallback mechanisms and logging the issues.
 - **Trade Execution Errors**: The `TradingLogic` class handles trade execution errors by validating orders before placing them and logging any issues.
 
 ## Performance Optimization
@@ -98,4 +88,4 @@ The trading bot includes several security features to ensure the safety and inte
 
 ## Conclusion
 
-The architecture of the trading bot is designed to be robust, scalable, and maintainable. By leveraging modular components and comprehensive error handling, the trading bot aims to provide reliable and high-performance trading operations. The integration of technical and qualitative analysis ensures informed trading decisions, while the CLI interface provides a user-friendly way to monitor and interact with the system.
+The architecture of the trading bot is designed to be robust, scalable, and maintainable. By leveraging modular components and comprehensive error handling, the trading bot aims to provide reliable and high-performance trading operations. The integration of technical analysis ensures informed trading decisions, while the CLI interface provides a user-friendly way to monitor and interact with the system.

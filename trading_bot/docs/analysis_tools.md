@@ -52,17 +52,11 @@ where \( \text{Typical Price} \) is the average of the high, low, and close pric
 
 ## Qualitative Analysis Tools
 
-### Google News API
-The Google News API is used to fetch news articles related to a specific stock. The sentiment of the articles is analyzed using Natural Language Processing (NLP) techniques.
-
-### Twitter API
-The Twitter API is used to fetch tweets related to a specific stock. The sentiment of the tweets is analyzed using NLP techniques.
-
 ### Sentiment Analysis
 Sentiment analysis is performed using the TextBlob library. The sentiment polarity score ranges from -1 (negative) to 1 (positive).
 
 ### Aggregated Sentiment Score
-The aggregated sentiment score is calculated by averaging the sentiment scores from news articles and tweets.
+The aggregated sentiment score is calculated by averaging the sentiment scores from news articles.
 
 ## Fundamental Analysis Tools
 

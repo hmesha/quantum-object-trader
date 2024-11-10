@@ -1,24 +1,11 @@
 import logging
-from trading_bot.src.api.api_connector import APIConnector
 from trading_bot.src.analysis.technical_analysis import TechnicalAnalysis
-from trading_bot.src.analysis.qualitative_analysis import QualitativeAnalysis
+
 
 class TradingLogic:
     def __init__(self, config):
         self.config = config
-        self.api_connector = APIConnector(
-            config['api']['base_url'],
-            config['api']['api_key'],
-            config['api']['api_secret'],
-            config['api']['reconnect_attempts'],
-            config['api']['reconnect_backoff']
-        )
         self.technical_analysis = TechnicalAnalysis()
-        self.qualitative_analysis = QualitativeAnalysis(
-            config['qualitative_analysis']['news_api_key'],
-            config['qualitative_analysis']['twitter_api_key'],
-            config['qualitative_analysis']['twitter_api_secret']
-        )
         self.logger = logging.getLogger(__name__)
 
     def execute_trade(self, symbol, order_type, quantity, price=None):
@@ -30,9 +17,6 @@ class TradingLogic:
         :param quantity: The number of shares to trade
         :param price: The price for limit/stop orders (optional)
         """
-        if not self.api_connector.is_connected():
-            self.api_connector.connect()
-
         # Validate order parameters
         if quantity <= 0:
             self.logger.error("Quantity must be greater than zero")
@@ -60,10 +44,9 @@ class TradingLogic:
             return None
 
         technical_signal = self.technical_analysis.evaluate(market_data)
-        qualitative_signal = self.qualitative_analysis.get_qualitative_analysis(symbol)
 
-        if technical_signal and qualitative_signal:
-            combined_signal = (technical_signal + qualitative_signal) / 2
+        if technical_signal:
+            combined_signal = technical_signal / 2
             return combined_signal
         return None
 

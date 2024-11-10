@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from src.analysis.technical_analysis import TechnicalAnalysis
 
+
 class TestTechnicalAnalysis(unittest.TestCase):
 
     def setUp(self):
@@ -63,6 +64,7 @@ class TestTechnicalAnalysis(unittest.TestCase):
         cci = self.ta.cci(3)
         expected = pd.Series([np.nan, np.nan, 0, 0, 0, 0, 0, 0, 0, 0])
         pd.testing.assert_series_equal(cci, expected)
+
 
 if __name__ == '__main__':
     unittest.main()
