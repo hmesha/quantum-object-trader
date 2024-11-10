@@ -1,11 +1,12 @@
 import logging
 from src.analysis.technical_analysis import TechnicalAnalysis
-
+from src.api.ib_connector import IBClient
 
 class TradingLogic:
-    def __init__(self, config, technical_analysis):
+    def __init__(self, config, technical_analysis, api_connector):
         self.config = config
         self.technical_analysis = technical_analysis
+        self.api_connector = api_connector
         self.logger = logging.getLogger(__name__)
 
     def execute_trade(self, symbol, order_type, quantity, price=None):

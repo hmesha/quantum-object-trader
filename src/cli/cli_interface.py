@@ -1,6 +1,7 @@
 import argparse
 from src.trading.trading_logic import TradingLogic
 from src.analysis.technical_analysis import TechnicalAnalysis
+from src.api.ib_connector import IBClient
 import yaml
 import pandas as pd
 
@@ -25,7 +26,8 @@ def main():
     })
 
     technical_analysis = TechnicalAnalysis(market_data)
-    trading_logic = TradingLogic(config, technical_analysis)
+    api_connector = IBClient(config)
+    trading_logic = TradingLogic(config, technical_analysis, api_connector)
 
     if args.order_type in ["limit", "stop"] and args.price is None:
         print("Error: Price must be specified for limit/stop orders")
