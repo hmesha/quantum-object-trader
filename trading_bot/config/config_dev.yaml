@@ -1,0 +1,52 @@
+# Development configuration file for trading bot
+
+# General settings
+general:
+  log_level: DEBUG
+  log_file: logs/trading_bot_dev.log
+
+# API settings
+api:
+  base_url: https://api.sandbox.interactivebrokers.com
+  api_key: ${IB_API_KEY}
+  api_secret: ${IB_API_SECRET}
+  reconnect_attempts: 5
+  reconnect_backoff: 2
+
+# Data settings
+data:
+  buffer_size: 1000
+  historical_data_path: data/historical/
+  time_series_db: influxdb://localhost:8086
+
+# Technical analysis settings
+technical_analysis:
+  sma_period: 20
+  ema_period: 50
+  vwap_period: 14
+  rsi_period: 14
+  macd_fast_period: 12
+  macd_slow_period: 26
+  macd_signal_period: 9
+  bollinger_bands_period: 20
+  bollinger_bands_std_dev: 2
+
+# Qualitative analysis settings
+qualitative_analysis:
+  google_news_api_key: ${GOOGLE_NEWS_API_KEY}
+  twitter_api_key: ${TWITTER_API_KEY}
+  twitter_api_secret: ${TWITTER_API_SECRET}
+  sec_filings_path: data/sec_filings/
+  sentiment_threshold: 0.5
+
+# Trading settings
+trading:
+  max_position_size: 100
+  daily_loss_limit: 1000
+  max_trade_frequency: 10
+  volatility_position_sizing: true
+
+# CLI settings
+cli:
+  refresh_interval: 1
+  color_scheme: default
