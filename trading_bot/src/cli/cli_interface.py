@@ -3,7 +3,7 @@ import logging
 import time
 from colorama import Fore, Style, init
 from trading_bot.src.trading.trading_logic import TradingLogic
-from trading_bot.config import config
+from trading_bot.config.config import config
 
 class CLIInterface:
     def __init__(self):

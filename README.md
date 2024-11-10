@@ -52,7 +52,7 @@ conda activate trading_bot
 3. Install dependencies:
 
 ```sh
-pip install -r requirements/requirements.txt
+pip install -r trading_bot/requirements/requirements.txt
 ```
 
 4. Set up environment variables:
@@ -68,7 +68,7 @@ TWITTER_API_SECRET=your_twitter_api_secret
 
 5. Configure the bot:
 
-Modify the configuration files in the `config` folder according to your requirements.
+Modify the configuration files in the `trading_bot/config` folder according to your requirements.
 
 ## Usage
 
@@ -80,13 +80,13 @@ python -m trading_bot.src.cli.cli_interface --symbol AAPL --order_type market --
 
 ## Documentation
 
-For detailed information on the trading bot's architecture, setup, and usage, refer to the `docs` folder:
+For detailed information on the trading bot's architecture, setup, and usage, refer to the `trading_bot/docs` folder:
 
-- [Setup Guide](docs/setup_guide.md)
-- [User Manual](docs/user_manual.md)
-- [API Documentation](docs/api_documentation.md)
-- [Architecture Documentation](docs/architecture_documentation.md)
-- [Analysis Tools Documentation](docs/analysis_tools.md)
+- [Setup Guide](trading_bot/docs/setup_guide.md)
+- [User Manual](trading_bot/docs/user_manual.md)
+- [API Documentation](trading_bot/docs/api_documentation.md)
+- [Architecture Documentation](trading_bot/docs/architecture_documentation.md)
+- [Analysis Tools Documentation](trading_bot/docs/analysis_tools.md)
 
 ## Contributing
 

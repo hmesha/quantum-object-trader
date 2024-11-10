@@ -40,7 +40,7 @@ conda activate trading_bot
 Install the required dependencies using the provided `requirements.txt` file:
 
 ```sh
-pip install -r requirements/requirements.txt
+pip install -r trading_bot/requirements/requirements.txt
 ```
 
 ## Step 4: Configuration
@@ -62,9 +62,9 @@ TWITTER_API_SECRET=your_twitter_api_secret
 
 The project includes three configuration files:
 
-- `config/config.yaml`: General configuration
-- `config/config_dev.yaml`: Development configuration
-- `config/config_prod.yaml`: Production configuration
+- `trading_bot/config/config.yaml`: General configuration
+- `trading_bot/config/config_dev.yaml`: Development configuration
+- `trading_bot/config/config_prod.yaml`: Production configuration
 
 You can modify these files according to your requirements.
 
@@ -88,10 +88,10 @@ pytest
 
 ## Additional Resources
 
-- [API Documentation](api_documentation.md)
-- [User Manual](user_manual.md)
-- [Troubleshooting Guide](troubleshooting_guide.md)
-- [Architecture Documentation](architecture_documentation.md)
+- [API Documentation](trading_bot/docs/api_documentation.md)
+- [User Manual](trading_bot/docs/user_manual.md)
+- [Troubleshooting Guide](trading_bot/docs/troubleshooting_guide.md)
+- [Architecture Documentation](trading_bot/docs/architecture_documentation.md)
 
 For any issues or questions, please refer to the [Troubleshooting Guide](troubleshooting_guide.md) or open an issue on the GitHub repository.
 

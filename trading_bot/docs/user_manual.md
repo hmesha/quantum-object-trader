@@ -16,20 +16,20 @@ This user manual provides detailed instructions on how to use the trading bot, i
 The trading bot is a high-performance, production-ready algorithmic trading system that combines real-time technical analysis with natural language processing for sentiment-driven trading decisions. Built with Python, it features sub-100ms latency, comprehensive risk management, and a color-coded CLI interface for monitoring live trading operations.
 
 ## Setup
-Follow the steps in the [Setup Guide](setup_guide.md) to set up the trading bot on your local machine. This includes cloning the repository, setting up a virtual environment, installing dependencies, and configuring environment variables.
+Follow the steps in the [Setup Guide](trading_bot/docs/setup_guide.md) to set up the trading bot on your local machine. This includes cloning the repository, setting up a virtual environment, installing dependencies, and configuring environment variables.
 
 ## Configuration
 The trading bot uses YAML-based configuration files to manage settings. There are three main configuration files:
 
-- `config/config.yaml`: General configuration
-- `config/config_dev.yaml`: Development configuration
-- `config/config_prod.yaml`: Production configuration
+- `trading_bot/config/config.yaml`: General configuration
+- `trading_bot/config/config_dev.yaml`: Development configuration
+- `trading_bot/config/config_prod.yaml`: Production configuration
 
 ### General Configuration
-The general configuration file (`config/config.yaml`) includes settings for logging, API integration, data management, technical analysis, qualitative analysis, trading, and the CLI interface. Modify these settings according to your requirements.
+The general configuration file (`trading_bot/config/config.yaml`) includes settings for logging, API integration, data management, technical analysis, qualitative analysis, trading, and the CLI interface. Modify these settings according to your requirements.
 
 ### Development and Production Configuration
-The development (`config/config_dev.yaml`) and production (`config/config_prod.yaml`) configuration files override the general configuration for specific environments. Use these files to set environment-specific settings.
+The development (`trading_bot/config/config_dev.yaml`) and production (`trading_bot/config/config_prod.yaml`) configuration files override the general configuration for specific environments. Use these files to set environment-specific settings.
 
 ## Running the Bot
 You can run the trading bot using the CLI interface. For example, to execute a market order to buy 10 shares of AAPL, use the following command:
@@ -62,7 +62,7 @@ python -m trading_bot.src.cli.cli_interface --symbol GOOGL --order_type limit --
 ```
 
 ## Troubleshooting
-Refer to the [Troubleshooting Guide](troubleshooting_guide.md) for common issues and their solutions. This guide includes information on error messages, connectivity issues, and performance optimization.
+Refer to the [Troubleshooting Guide](trading_bot/docs/troubleshooting_guide.md) for common issues and their solutions. This guide includes information on error messages, connectivity issues, and performance optimization.
 
 ## Contact
 For any questions or support, please contact our support team at support@tradingbot.com.
