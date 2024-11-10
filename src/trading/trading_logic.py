@@ -3,9 +3,9 @@ from src.analysis.technical_analysis import TechnicalAnalysis
 
 
 class TradingLogic:
-    def __init__(self, config):
+    def __init__(self, config, technical_analysis):
         self.config = config
-        self.technical_analysis = TechnicalAnalysis()
+        self.technical_analysis = technical_analysis
         self.logger = logging.getLogger(__name__)
 
     def execute_trade(self, symbol, order_type, quantity, price=None):
@@ -31,14 +31,14 @@ class TradingLogic:
         else:
             self.logger.error("Trade execution failed")
 
-    def evaluate_trading_opportunity(self, symbol):
+    def evaluate_trading_opportunity(self, symbol, market_data):
         """
         Evaluate trading opportunity by combining technical and qualitative analysis.
 
         :param symbol: The stock symbol to evaluate
+        :param market_data: The market data to evaluate
         :return: Combined signal score
         """
-        market_data = self.api_connector.get_market_data(symbol)
         if not market_data:
             self.logger.error("Failed to retrieve market data")
             return None

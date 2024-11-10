@@ -1,6 +1,8 @@
 import unittest
 from unittest.mock import patch, MagicMock
 from src.trading.trading_logic import TradingLogic
+from src.analysis.technical_analysis import TechnicalAnalysis
+import pandas as pd
 
 class TestTradingLogic(unittest.TestCase):
 
@@ -24,7 +26,14 @@ class TestTradingLogic(unittest.TestCase):
                 'max_trade_frequency': 10
             }
         }
-        self.trading_logic = TradingLogic(self.config)
+        market_data = pd.DataFrame({
+            'close': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            'high': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            'low': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+            'volume': [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+        })
+        technical_analysis = TechnicalAnalysis(market_data)
+        self.trading_logic = TradingLogic(self.config, technical_analysis)
 
     @patch('src.api.ib_connector.IBClient')
     def test_execute_trade(self, MockIBClient):
@@ -41,7 +50,7 @@ class TestTradingLogic(unittest.TestCase):
         mock_ib_client.get_market_data.return_value = {'price': 150}
 
         with patch.object(self.trading_logic.technical_analysis, 'evaluate', return_value=0.8):
-            signal = self.trading_logic.evaluate_trading_opportunity('AAPL')
+            signal = self.trading_logic.evaluate_trading_opportunity('AAPL', mock_ib_client.get_market_data.return_value)
             self.assertEqual(signal, 0.4)
 
     def test_manage_risk(self):
