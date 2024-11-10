@@ -52,7 +52,7 @@ conda activate trading_bot
 3. Install dependencies:
 
 ```sh
-pip install -r trading_bot/requirements/requirements.txt
+pip install -r ./requirements/requirements.txt
 ```
 
 4. Set up environment variables:
@@ -66,7 +66,7 @@ NEWS_API_KEY=your_news_api_key
 
 5. Configure the bot:
 
-Modify the configuration files in the `trading_bot/config` folder according to your requirements.
+Modify the configuration files in the `./config` folder according to your requirements.
 
 ## Usage
 
@@ -78,13 +78,13 @@ python -m trading_bot.src.cli.cli_interface --symbol AAPL --order_type market --
 
 ## Documentation
 
-For detailed information on the trading bot's architecture, setup, and usage, refer to the `trading_bot/docs` folder:
+For detailed information on the trading bot's architecture, setup, and usage, refer to the `./docs` folder:
 
-- [Setup Guide](trading_bot/docs/setup_guide.md)
-- [User Manual](trading_bot/docs/user_manual.md)
-- [API Documentation](trading_bot/docs/api_documentation.md)
-- [Architecture Documentation](trading_bot/docs/architecture_documentation.md)
-- [Troubleshooting Guide](trading_bot/docs/troubleshooting_guide.md)
+- [Setup Guide](./docs/setup_guide.md)
+- [User Manual](./docs/user_manual.md)
+- [API Documentation](./docs/api_documentation.md)
+- [Architecture Documentation](./docs/architecture_documentation.md)
+- [Troubleshooting Guide](./docs/troubleshooting_guide.md)
 
 ## Contributing
 
