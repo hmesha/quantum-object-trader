@@ -10,7 +10,7 @@ Quantum Trader is a high-performance, production-ready algorithmic trading syste
 
 - Real-time market data processing with <100ms latency
 - Advanced technical indicators (SMA, EMA, VWAP, RSI, MACD, Bollinger Bands)
-- Natural language processing for news and social media sentiment analysis
+- Natural language processing for news sentiment analysis
 - Robust risk management and position sizing
 - Interactive Brokers TWS API integration with auto-reconnection
 - Color-coded CLI dashboard for real-time monitoring
@@ -61,9 +61,7 @@ Create a `.env` file in the root directory of the project:
 
 ```sh
 # .env file
-NEWS_API_KEY=ea19f8ff137e4480a77417d19782a94d
-TWITTER_API_KEY=your_twitter_api_key
-TWITTER_API_SECRET=your_twitter_api_secret
+NEWS_API_KEY=your_news_api_key
 ```
 
 5. Configure the bot:
@@ -86,7 +84,7 @@ For detailed information on the trading bot's architecture, setup, and usage, re
 - [User Manual](trading_bot/docs/user_manual.md)
 - [API Documentation](trading_bot/docs/api_documentation.md)
 - [Architecture Documentation](trading_bot/docs/architecture_documentation.md)
-- [Analysis Tools Documentation](trading_bot/docs/analysis_tools.md)
+- [Troubleshooting Guide](trading_bot/docs/troubleshooting_guide.md)
 
 ## Contributing
 

@@ -16,7 +16,7 @@ This user manual provides detailed instructions on how to use the trading bot, i
 The trading bot is a high-performance, production-ready algorithmic trading system that combines real-time technical analysis with natural language processing for sentiment-driven trading decisions. Built with Python, it features sub-100ms latency, comprehensive risk management, and a color-coded CLI interface for monitoring live trading operations.
 
 ## Setup
-Follow the steps in the [Setup Guide](trading_bot/docs/setup_guide.md) to set up the trading bot on your local machine. This includes cloning the repository, setting up a virtual environment, installing dependencies, and configuring environment variables.
+Follow the steps in the [Setup Guide](../setup_guide.md) to set up the trading bot on your local machine. This includes cloning the repository, setting up a virtual environment, installing dependencies, and configuring environment variables.
 
 ## Configuration
 The trading bot uses YAML-based configuration files to manage settings. There are three main configuration files:
@@ -62,7 +62,7 @@ python -m trading_bot.src.cli.cli_interface --symbol GOOGL --order_type limit --
 ```
 
 ## Troubleshooting
-Refer to the [Troubleshooting Guide](trading_bot/docs/troubleshooting_guide.md) for common issues and their solutions. This guide includes information on error messages, connectivity issues, and performance optimization.
+Refer to the [Troubleshooting Guide](../troubleshooting_guide.md) for common issues and their solutions. This guide includes information on error messages, connectivity issues, and performance optimization.
 
 ## Contact
 For any questions or support, please contact our support team at support@tradingbot.com.

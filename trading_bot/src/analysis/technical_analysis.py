@@ -1,6 +1,7 @@
 import pandas as pd
 import numpy as np
 
+
 class TechnicalAnalysis:
     def __init__(self, data):
         self.data = data
