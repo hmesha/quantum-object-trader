@@ -38,6 +38,6 @@ class IBClient(EWrapper, EClient):
         pass
 
 if __name__ == "__main__":
-    with open('trading_bot/config/config_dev.yaml', 'r') as file:
+    with open('src/config/config.yaml', 'r') as file:
         config = yaml.safe_load(file)
     client = IBClient(config)

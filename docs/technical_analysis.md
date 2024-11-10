@@ -108,6 +108,48 @@ where Typical Price is calculated as:
 **Configuration**:
 - `period`: Number of periods for CCI calculation.
 
+## Fundamental Analysis Tools
+
+### Price-to-Earnings (P/E) Ratio
+The Price-to-Earnings (P/E) ratio is calculated by dividing the stock price by the earnings per share (EPS). The formula for P/E ratio is:
+\[ \text{P/E Ratio} = \frac{\text{Price}}{\text{Earnings Per Share}} \]
+
+### Price-to-Book (P/B) Ratio
+The Price-to-Book (P/B) ratio is calculated by dividing the stock price by the book value per share. The formula for P/B ratio is:
+\[ \text{P/B Ratio} = \frac{\text{Price}}{\text{Book Value Per Share}} \]
+
+### Debt-to-Equity (D/E) Ratio
+The Debt-to-Equity (D/E) ratio is calculated by dividing the total debt by the total equity. The formula for D/E ratio is:
+\[ \text{D/E Ratio} = \frac{\text{Total Debt}}{\text{Total Equity}} \]
+
+### Return on Equity (ROE)
+The Return on Equity (ROE) is calculated by dividing the net income by the total equity. The formula for ROE is:
+\[ \text{ROE} = \frac{\text{Net Income}}{\text{Total Equity}} \]
+
+### Current Ratio
+The Current Ratio is calculated by dividing the current assets by the current liabilities. The formula for Current Ratio is:
+\[ \text{Current Ratio} = \frac{\text{Current Assets}}{\text{Current Liabilities}} \]
+
+### Quick Ratio
+The Quick Ratio is calculated by subtracting the inventory from the current assets and then dividing by the current liabilities. The formula for Quick Ratio is:
+\[ \text{Quick Ratio} = \frac{\text{Current Assets} - \text{Inventory}}{\text{Current Liabilities}} \]
+
+### Gross Margin
+The Gross Margin is calculated by subtracting the cost of goods sold from the revenue and then dividing by the revenue. The formula for Gross Margin is:
+\[ \text{Gross Margin} = \frac{\text{Revenue} - \text{Cost of Goods Sold}}{\text{Revenue}} \]
+
+### Operating Margin
+The Operating Margin is calculated by dividing the operating income by the revenue. The formula for Operating Margin is:
+\[ \text{Operating Margin} = \frac{\text{Operating Income}}{\text{Revenue}} \]
+
+### Net Profit Margin
+The Net Profit Margin is calculated by dividing the net income by the revenue. The formula for Net Profit Margin is:
+\[ \text{Net Profit Margin} = \frac{\text{Net Income}}{\text{Revenue}} \]
+
+### Earnings Per Share (EPS)
+The Earnings Per Share (EPS) is calculated by dividing the net income by the number of shares outstanding. The formula for EPS is:
+\[ \text{EPS} = \frac{\text{Net Income}}{\text{Shares Outstanding}} \]
+
 ## Conclusion
 
 This document provides an overview of the technical analysis tools implemented in the trading bot. Each tool's description, mathematical formula, and configuration guidelines are provided to help users understand and utilize these tools effectively.
