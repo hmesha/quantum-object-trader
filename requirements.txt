@@ -5,3 +5,4 @@ PyYAML
 unittest2
 requests
 argparse
+textblob

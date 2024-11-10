@@ -15,7 +15,7 @@ This document provides a comprehensive guide to the technical analysis tools imp
 where \( n \) is the number of periods.
 
 **Configuration**:
-- `period`: Number of periods for SMA calculation.
+- `period`: Number of periods for SMA calculation (default: 20).
 
 ### 2. Exponential Moving Average (EMA)
 
@@ -26,14 +26,17 @@ where \( n \) is the number of periods.
 where \( n \) is the number of periods.
 
 **Configuration**:
-- `period`: Number of periods for EMA calculation.
+- `period`: Number of periods for EMA calculation (default: 20).
 
 ### 3. Volume Weighted Average Price (VWAP)
 
 **Description**: The Volume Weighted Average Price (VWAP) is a trading benchmark that gives the average price a security has traded at throughout the day, based on both volume and price.
 
 **Formula**:
-\[ \text{VWAP} = \frac{\sum (\text{Price} \times \text{Volume})}{\sum \text{Volume}} \]
+\[ \text{VWAP} = \frac{\sum (\text{Typical Price} \times \text{Volume})}{\sum \text{Volume}} \]
+
+**Configuration**:
+- `period`: Number of periods for VWAP calculation (default: 14).
 
 ### 4. Relative Strength Index (RSI)
 
@@ -43,20 +46,20 @@ where \( n \) is the number of periods.
 \[ \text{RSI} = 100 - \frac{100}{1 + \frac{\text{Average Gain}}{\text{Average Loss}}} \]
 
 **Configuration**:
-- `period`: Number of periods for RSI calculation.
+- `period`: Number of periods for RSI calculation (default: 14).
 
 ### 5. Moving Average Convergence Divergence (MACD)
 
-**Description**: The Moving Average Convergence Divergence (MACD) is a trend-following momentum indicator that shows the relationship between two moving averages of a security’s price.
+**Description**: The Moving Average Convergence Divergence (MACD) is a trend-following momentum indicator that shows the relationship between two moving averages of a security's price.
 
 **Formula**:
 \[ \text{MACD Line} = \text{EMA}_{\text{fast}} - \text{EMA}_{\text{slow}} \]
 \[ \text{Signal Line} = \text{EMA of MACD Line} \]
 
 **Configuration**:
-- `fast_period`: Number of periods for fast EMA.
-- `slow_period`: Number of periods for slow EMA.
-- `signal_period`: Number of periods for signal line.
+- `fast_period`: Number of periods for fast EMA (default: 12).
+- `slow_period`: Number of periods for slow EMA (default: 26).
+- `signal_period`: Number of periods for signal line (default: 9).
 
 ### 6. Bollinger Bands
 
@@ -67,8 +70,8 @@ where \( n \) is the number of periods.
 \[ \text{Lower Band} = \text{SMA} - (k \times \text{Standard Deviation}) \]
 
 **Configuration**:
-- `period`: Number of periods for SMA.
-- `num_std_dev`: Number of standard deviations for bands.
+- `period`: Number of periods for SMA (default: 20).
+- `std_dev`: Number of standard deviations for bands (default: 2).
 
 ### 7. Average True Range (ATR)
 
@@ -76,13 +79,13 @@ where \( n \) is the number of periods.
 
 **Formula**:
 \[ \text{ATR} = \text{Average}(\text{True Range}) \]
-where True Range is the greatest of the following:
+where True Range is the greatest of:
 - Current high minus the current low
 - Absolute value of the current high minus the previous close
 - Absolute value of the current low minus the previous close
 
 **Configuration**:
-- `period`: Number of periods for ATR calculation.
+- `period`: Number of periods for ATR calculation (default: 14).
 
 ### 8. Average Directional Index (ADX)
 
@@ -94,7 +97,7 @@ where DX is calculated as:
 \[ \text{DX} = 100 \times \frac{|\text{DI+} - \text{DI-}|}{\text{DI+} + \text{DI-}} \]
 
 **Configuration**:
-- `period`: Number of periods for ADX calculation.
+- `period`: Number of periods for ADX calculation (default: 14).
 
 ### 9. Commodity Channel Index (CCI)
 
@@ -106,50 +109,24 @@ where Typical Price is calculated as:
 \[ \text{Typical Price} = \frac{\text{High} + \text{Low} + \text{Close}}{3} \]
 
 **Configuration**:
-- `period`: Number of periods for CCI calculation.
+- `period`: Number of periods for CCI calculation (default: 20).
 
-## Fundamental Analysis Tools
+## Sentiment Analysis
 
-### Price-to-Earnings (P/E) Ratio
-The Price-to-Earnings (P/E) ratio is calculated by dividing the stock price by the earnings per share (EPS). The formula for P/E ratio is:
-\[ \text{P/E Ratio} = \frac{\text{Price}}{\text{Earnings Per Share}} \]
+The trading bot also includes sentiment analysis capabilities through the QualitativeAnalysis class. This analyzes market sentiment using:
 
-### Price-to-Book (P/B) Ratio
-The Price-to-Book (P/B) ratio is calculated by dividing the stock price by the book value per share. The formula for P/B ratio is:
-\[ \text{P/B Ratio} = \frac{\text{Price}}{\text{Book Value Per Share}} \]
+1. News Articles Analysis
+   - Fetches recent news articles about the stock
+   - Analyzes sentiment of article titles and descriptions
+   - Uses TextBlob for natural language processing
 
-### Debt-to-Equity (D/E) Ratio
-The Debt-to-Equity (D/E) ratio is calculated by dividing the total debt by the total equity. The formula for D/E ratio is:
-\[ \text{D/E Ratio} = \frac{\text{Total Debt}}{\text{Total Equity}} \]
+2. Social Media Analysis
+   - Fetches recent tweets about the stock
+   - Analyzes sentiment of tweet content
+   - Aggregates social media sentiment
 
-### Return on Equity (ROE)
-The Return on Equity (ROE) is calculated by dividing the net income by the total equity. The formula for ROE is:
-\[ \text{ROE} = \frac{\text{Net Income}}{\text{Total Equity}} \]
-
-### Current Ratio
-The Current Ratio is calculated by dividing the current assets by the current liabilities. The formula for Current Ratio is:
-\[ \text{Current Ratio} = \frac{\text{Current Assets}}{\text{Current Liabilities}} \]
-
-### Quick Ratio
-The Quick Ratio is calculated by subtracting the inventory from the current assets and then dividing by the current liabilities. The formula for Quick Ratio is:
-\[ \text{Quick Ratio} = \frac{\text{Current Assets} - \text{Inventory}}{\text{Current Liabilities}} \]
-
-### Gross Margin
-The Gross Margin is calculated by subtracting the cost of goods sold from the revenue and then dividing by the revenue. The formula for Gross Margin is:
-\[ \text{Gross Margin} = \frac{\text{Revenue} - \text{Cost of Goods Sold}}{\text{Revenue}} \]
-
-### Operating Margin
-The Operating Margin is calculated by dividing the operating income by the revenue. The formula for Operating Margin is:
-\[ \text{Operating Margin} = \frac{\text{Operating Income}}{\text{Revenue}} \]
-
-### Net Profit Margin
-The Net Profit Margin is calculated by dividing the net income by the revenue. The formula for Net Profit Margin is:
-\[ \text{Net Profit Margin} = \frac{\text{Net Income}}{\text{Revenue}} \]
-
-### Earnings Per Share (EPS)
-The Earnings Per Share (EPS) is calculated by dividing the net income by the number of shares outstanding. The formula for EPS is:
-\[ \text{EPS} = \frac{\text{Net Income}}{\text{Shares Outstanding}} \]
+The sentiment analysis returns a score between -1 (extremely negative) and 1 (extremely positive), which can be used alongside technical indicators for trading decisions.
 
 ## Conclusion
 
-This document provides an overview of the technical analysis tools implemented in the trading bot. Each tool's description, mathematical formula, and configuration guidelines are provided to help users understand and utilize these tools effectively.
+This document provides an overview of the technical and sentiment analysis tools implemented in the trading bot. Each tool's description, mathematical formula, and configuration guidelines are provided to help users understand and utilize these tools effectively.
