@@ -2,180 +2,167 @@
 
 ## Overview
 
-The CLI interface provides a command-line tool for interacting with the trading system. It offers commands for executing trades, monitoring positions, and managing the trading bot.
+The CLI interface provides a command-line tool for interacting with the Quantum Trader system. It handles market data processing, trading decisions, and system monitoring through a multi-agent architecture.
 
 ## Command Structure
 
 ### Basic Command Format
 ```bash
-python -m src.cli.cli_interface [command] [options]
+python -m src.cli.cli_interface --symbols SYMBOL1 SYMBOL2 ... --mode MODE
 ```
 
-### Global Options
-- `--verbose`: Enable detailed logging
-- `--config`: Specify custom config file path
-- `--output`: Specify output format (text/json)
+### Required Arguments
+- `--symbols`: List of stock symbols to trade (e.g., AAPL MSFT GOOGL)
+- `--mode`: Trading mode, either 'paper' or 'live' (default: paper)
 
-## Available Commands
+## Prerequisites
 
-### Trading Commands
+Before starting the system, ensure:
 
-#### Execute Order
+1. Interactive Brokers TWS or IB Gateway is running
+2. API connections are enabled in TWS/Gateway
+3. Socket port (default: 7497) is correctly configured
+4. Auto-restart is enabled in TWS/Gateway
+5. 'Read-Only API' is disabled in TWS/Gateway configuration
+
+## System Operation
+
+### Starting the System
 ```bash
-python -m src.cli.cli_interface --symbol AAPL --order_type market --quantity 100
+python -m src.cli.cli_interface --symbols AAPL MSFT GOOGL --mode paper
 ```
 
-Options:
-- `--symbol`: Stock symbol (required)
-- `--order_type`: Type of order (market/limit/stop) (required)
-- `--quantity`: Number of shares (required)
-- `--price`: Price for limit/stop orders
-- `--action`: BUY/SELL (default: BUY)
+The system will:
+1. Check all prerequisites
+2. Connect to Interactive Brokers
+3. Initialize the trading swarm
+4. Begin market data processing
+5. Start autonomous trading operations
 
-#### Cancel Order
-```bash
-python -m src.cli.cli_interface cancel --order_id 12345
-```
+### Market Data Processing
 
-Options:
-- `--order_id`: ID of order to cancel (required)
+The system processes market data with:
+- Real-time price updates
+- Volume tracking
+- High/low price monitoring
+- Synchronized data management
 
-### Monitoring Commands
+### Trading Operations
 
-#### Show Positions
-```bash
-python -m src.cli.cli_interface positions
-```
+The system operates through specialized agents:
+1. Technical Analysis Agent
+   - Analyzes market data using technical indicators
+   - Provides technical-based trading signals
 
-Options:
-- `--symbol`: Filter by symbol
-- `--min_value`: Minimum position value
-- `--format`: Output format (table/json)
+2. Sentiment Analysis Agent
+   - Analyzes market sentiment
+   - Provides sentiment-based signals
 
-#### Show Orders
-```bash
-python -m src.cli.cli_interface orders
-```
+3. Risk Management Agent
+   - Monitors position sizes and exposure
+   - Enforces risk limits
 
-Options:
-- `--status`: Filter by status (open/filled/cancelled)
-- `--symbol`: Filter by symbol
-- `--start_date`: Filter by start date
-- `--end_date`: Filter by end date
+4. Trade Execution Agent
+   - Handles order placement
+   - Manages trade execution
 
-### Configuration Commands
+## System Output
 
-#### Show Config
-```bash
-python -m src.cli.cli_interface config show
-```
-
-#### Update Config
-```bash
-python -m src.cli.cli_interface config update --key value
-```
-
-### System Commands
-
-#### Check Status
-```bash
-python -m src.cli.cli_interface status
-```
-
-Shows:
+The system provides detailed logging of:
 - Connection status
-- System health
-- API rate limits
-- Active processes
+- Market data updates
+- Trading decisions
+- Risk management actions
+- System status
 
-#### Start Bot
-```bash
-python -m src.cli.cli_interface start
+Example output:
 ```
-
-Options:
-- `--strategy`: Trading strategy to use
-- `--symbols`: Symbols to trade
-- `--paper_trading`: Enable paper trading mode
-
-#### Stop Bot
-```bash
-python -m src.cli.cli_interface stop
+2024-11-10 18:24:20,523 - __main__ - INFO - === Quantum Trader Starting ===
+2024-11-10 18:24:20,523 - __main__ - INFO - Mode: paper
+2024-11-10 18:24:20,523 - __main__ - INFO - Symbols: ['AAPL', 'MSFT', 'GOOGL']
+...
 ```
 
 ## Error Handling
 
-### Exit Codes
-- 0: Success
-- 1: General error
-- 2: Configuration error
-- 3: Connection error
-- 4: Order error
+The system handles various error conditions:
+- Connection issues
+- Market data problems
+- Trading errors
+- System failures
 
-### Error Messages
+Error messages include:
 - Clear error descriptions
+- Relevant context
 - Suggested solutions
-- Debug information in verbose mode
 
 ## Configuration
 
-### Environment Variables
-```bash
-TRADING_BOT_CONFIG=/path/to/config.yaml
-TRADING_BOT_LOG_LEVEL=INFO
-TRADING_BOT_OUTPUT_FORMAT=text
-```
+The system uses a YAML configuration file (`src/config/config.yaml`) for:
+- API settings
+- Risk parameters
+- Trading rules
+- System behavior
 
-### Config File
+Example configuration:
 ```yaml
-cli:
-  default_output: text
-  color_enabled: true
-  timestamp_format: "%Y-%m-%d %H:%M:%S"
-  log_level: INFO
+api:
+  tws_endpoint: "127.0.0.1"
+  port: 7497
+
+risk_management:
+  position_limits:
+    max_position_size: 100
+  loss_limits:
+    daily_loss_limit: 1000
+
+agent_system:
+  update_interval: 60
 ```
 
-## Integration
+## Expected Behaviors
 
-The CLI interface integrates with:
-1. Trading system core functionality
-2. Real-time dashboard
-3. Configuration management
-4. Logging system
+### Market Data Reception
+- Regular price updates for each symbol
+- Synchronized timestamp, price, and volume data
+- Proper handling of market hours and data delays
 
-## Examples
+### Trading Decisions
+- Risk-based trade filtering
+- Position size limits enforcement
+- Trade rejection on risk limit violations
 
-### Basic Trading
-```bash
-# Buy 100 shares of AAPL at market price
-python -m src.cli.cli_interface --symbol AAPL --order_type market --quantity 100
+### System States
+- Active: System is running and processing data
+- Warning: System encounters non-critical issues
+- Error: System encounters critical problems
+- Shutdown: System is stopping operations
 
-# Sell 50 shares of GOOGL with limit price
-python -m src.cli.cli_interface --symbol GOOGL --order_type limit --quantity 50 --price 150.00 --action SELL
+## Troubleshooting
 
-# Check current positions
-python -m src.cli.cli_interface positions
+Common issues and solutions:
 
-# View open orders
-python -m src.cli.cli_interface orders --status open
-```
+1. Connection Problems
+   - Verify TWS/Gateway is running
+   - Check API connection settings
+   - Confirm port configuration
 
-### Bot Management
-```bash
-# Start bot with specific strategy
-python -m src.cli.cli_interface start --strategy momentum --symbols AAPL,GOOGL,MSFT
+2. Market Data Issues
+   - Verify market data subscriptions
+   - Check symbol validity
+   - Confirm market hours
 
-# Check bot status
-python -m src.cli.cli_interface status
+3. Trading Issues
+   - Check risk limits
+   - Verify account permissions
+   - Confirm trading hours
 
-# Stop bot
-python -m src.cli.cli_interface stop
-```
+## System Shutdown
 
-### Configuration
-```bash
-# Show current config
-python -m src.cli.cli_interface config show
-
-# Update config value
-python -m src.cli.cli_interface config update max_position_size 1000
+To stop the system:
+1. Press Ctrl+C for graceful shutdown
+2. System will:
+   - Close market data connections
+   - Cancel pending orders (if any)
+   - Disconnect from Interactive Brokers
+   - Save system state

@@ -2,197 +2,251 @@
 
 ## Overview
 
-The IB Connector module provides integration with Interactive Brokers' Trader Workstation (TWS) API, handling market data streaming, order execution, and connection management.
+The IB Connector module (`IBClient`) provides integration with Interactive Brokers' Trader Workstation (TWS) or IB Gateway. It handles market data streaming, connection management, and data synchronization.
+
+## Class Structure
+
+```python
+class IBClient(EWrapper, EClient):
+    """Interactive Brokers API Client"""
+```
+
+The `IBClient` class inherits from both `EWrapper` and `EClient` to provide a complete interface to the IB API.
+
+## Initialization
+
+```python
+def __init__(self, config):
+    """
+    Initialize the IB client with configuration
+    
+    Args:
+        config (dict): Configuration dictionary containing API settings
+    """
+```
+
+Required configuration:
+```yaml
+api:
+  tws_endpoint: "127.0.0.1"  # TWS/Gateway host
+  port: 7497                 # TWS/Gateway port
+```
 
 ## Connection Management
 
-### Initialization
-```python
-from src.api.ib_connector import IBConnector
+### Connecting to TWS/Gateway
 
-connector = IBConnector(
-    host="127.0.0.1",  # TWS/Gateway host
-    port=7497,         # TWS/Gateway port
-    client_id=1        # Unique client identifier
-)
+```python
+def connect_and_run(self):
+    """
+    Establish connection and start message processing thread
+    
+    Returns:
+        bool: True if connection successful, False otherwise
+    """
 ```
 
-### Auto-Reconnection
-The connector implements automatic reconnection logic:
-- Detects connection drops
-- Implements exponential backoff
-- Maintains state during reconnection
-- Resubscribes to market data feeds
-- Resynchronizes open orders and positions
+The connection process:
+1. Establishes connection to TWS/Gateway
+2. Starts message processing thread
+3. Waits for initial connection messages
+4. Returns connection status
 
-## Market Data
+### Error Handling
 
-### Real-time Data Streaming
-- Subscribes to market data feeds
-- Processes tick-by-tick data
-- Handles multiple data types:
-  - Trade data
-  - Bid/Ask quotes
-  - Volume
-  - OHLC data
-
-### Data Management
-- Efficient data buffering
-- Rate limit monitoring
-- Data validation
-- Error handling
-
-## Order Management
-
-### Order Types
-Supports multiple order types:
-- Market orders
-- Limit orders
-- Stop orders
-- Stop-limit orders
-- Trailing stop orders
-
-### Order Operations
 ```python
-# Place a market order
-order_id = connector.place_market_order(
-    symbol="AAPL",
-    quantity=100,
-    action="BUY"
-)
-
-# Place a limit order
-order_id = connector.place_limit_order(
-    symbol="AAPL",
-    quantity=100,
-    action="BUY",
-    limit_price=150.00
-)
-
-# Cancel an order
-connector.cancel_order(order_id)
+def error(self, reqId, errorCode, errorString, advancedOrderRejectJson=""):
+    """Handle error messages from TWS"""
 ```
 
-### Order Monitoring
-- Real-time order status updates
-- Fill price tracking
-- Partial fills handling
-- Order modification support
+Handles various error types:
+- Connection status messages (2104, 2106, 2158)
+- Security definition errors (200)
+- Market data subscription errors (354)
+- General errors
 
-## Position Management
+## Market Data Management
 
-### Position Tracking
-- Real-time position updates
-- Average cost calculation
-- P&L monitoring
-- Position reconciliation
+### Data Structure
 
-### Risk Management
-- Position size limits
-- Exposure monitoring
-- Stop loss management
-- Take profit management
+The market data is stored in a synchronized structure:
+```python
+self.market_data = defaultdict(lambda: {
+    'timestamp': [],    # Data timestamps
+    'close': [],       # Close/last prices
+    'high': [],        # High prices
+    'low': [],         # Low prices
+    'volume': [],      # Volume data
+    'last_update': None,
+    'current_high': None,
+    'current_low': None
+})
+```
 
-## Error Handling
+### Requesting Market Data
 
-### Error Types
-- Connection errors
-- Order rejection errors
-- Market data errors
-- System errors
+```python
+def get_market_data(self, symbol):
+    """
+    Get market data for a symbol
+    
+    Args:
+        symbol (str): Stock symbol
+    
+    Returns:
+        dict: Market data dictionary or None if error
+    """
+```
 
-### Error Recovery
-- Automatic error classification
-- Recovery strategies
-- Error logging
-- Alert generation
+The process:
+1. Creates contract specification
+2. Generates unique request ID
+3. Requests delayed market data
+4. Waits for data with timeout
+5. Returns synchronized data structure
 
-## Rate Limiting
+### Data Synchronization
 
-### TWS API Rate Limits
-- Request rate monitoring
-- Queue management
-- Throttling implementation
-- Burst handling
+The system ensures data synchronization through:
+1. Centralized update method
+2. Atomic operations with threading locks
+3. Consistent timestamp alignment
+4. Proper high/low tracking
 
-### Best Practices
-- Batch similar requests
-- Implement request spacing
-- Monitor API usage
-- Handle rate limit errors
+```python
+def _update_market_data(self, symbol, price, size=0):
+    """
+    Helper method to update market data ensuring synchronization
+    
+    Args:
+        symbol (str): Stock symbol
+        price (float): Current price
+        size (int): Trade size
+    """
+```
 
-## Logging
+### Price Updates
 
-### Log Levels
-- ERROR: Critical failures
-- WARNING: Potential issues
-- INFO: Normal operations
-- DEBUG: Detailed debugging
+```python
+def tickPrice(self, reqId, tickType, price, attrib):
+    """Handle price updates"""
+```
 
-### Log Categories
-- Connection events
-- Order operations
-- Market data events
-- Error events
+Handles various tick types:
+- Last/close prices (4, 68, 9)
+- High prices (6, 70)
+- Low prices (7, 71)
+- Bid/ask prices (1, 2, 65, 66)
 
-## Configuration
+### Volume Updates
 
-### Required Settings
+```python
+def tickSize(self, reqId, tickType, size):
+    """Handle size/volume updates"""
+```
+
+Processes volume data:
+- Trade volume (8, 72)
+- Updates synchronized with price data
+
+## Data Validation
+
+The system implements several validation layers:
+1. Price validation (must be > 0)
+2. Data synchronization checks
+3. Timeout handling
+4. Error state management
+
+## Best Practices
+
+### Market Data Handling
+1. Always use the synchronized update method
+2. Check for valid prices before processing
+3. Handle timeout conditions
+4. Implement proper error recovery
+
+### Connection Management
+1. Monitor connection status
+2. Handle reconnection scenarios
+3. Validate market data subscriptions
+4. Process error messages appropriately
+
+## Error Recovery
+
+The system implements various error recovery mechanisms:
+1. Connection retry logic
+2. Data resubscription
+3. State recovery
+4. Error logging and notification
+
+## Configuration Example
+
 ```yaml
-ib_connector:
-  host: "127.0.0.1"
+api:
+  tws_endpoint: "127.0.0.1"
   port: 7497
-  client_id: 1
-  reconnect_attempts: 5
-  reconnect_interval: 10
-  market_data_type: "DELAYED"  # or "REALTIME"
-```
 
-### Optional Settings
-```yaml
-ib_connector:
-  log_level: "INFO"
-  max_requests_per_second: 50
-  connection_timeout: 30
-  market_data_timeout: 10
+market_data:
+  timeout: 15
+  retry_attempts: 3
+  data_type: "delayed"  # or "realtime"
 ```
 
 ## Usage Example
 
 ```python
-from src.api.ib_connector import IBConnector
+from src.api.ib_connector import IBClient
 
-# Initialize connector
-connector = IBConnector(
-    host="127.0.0.1",
-    port=7497,
-    client_id=1
-)
+# Initialize client
+config = {
+    'api': {
+        'tws_endpoint': '127.0.0.1',
+        'port': 7497
+    }
+}
+client = IBClient(config)
 
-# Connect to TWS
-connector.connect()
-
-# Subscribe to market data
-connector.subscribe_market_data("AAPL")
-
-# Place a trade
-order_id = connector.place_market_order(
-    symbol="AAPL",
-    quantity=100,
-    action="BUY"
-)
-
-# Monitor order status
-status = connector.get_order_status(order_id)
-
-# Close connection
-connector.disconnect()
+# Connect to TWS/Gateway
+if client.connect_and_run():
+    # Request market data
+    market_data = client.get_market_data("AAPL")
+    if market_data:
+        print(f"Last price: {market_data['close'][-1]}")
 ```
 
-## Integration
+## Troubleshooting
 
-The IB Connector integrates with other system components:
-1. Provides market data to technical analysis module
-2. Executes trades based on trading logic signals
-3. Reports position updates to dashboard
-4. Logs all operations for analysis and debugging
+Common issues and solutions:
+
+1. Connection Issues
+   - Verify TWS/Gateway is running
+   - Check port configuration
+   - Confirm API permissions
+
+2. Market Data Issues
+   - Verify market data subscriptions
+   - Check symbol validity
+   - Confirm data type settings
+
+3. Synchronization Issues
+   - Check thread safety
+   - Verify data structure integrity
+   - Monitor update sequences
+
+## Logging
+
+The system provides detailed logging:
+- Connection events
+- Market data updates
+- Error conditions
+- System status changes
+
+## Integration Notes
+
+The IB Connector integrates with:
+1. Trading system core
+2. Market data processing
+3. Order management
+4. System monitoring
+
+Always ensure proper synchronization and error handling when integrating with other system components.

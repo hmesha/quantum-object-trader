@@ -2,131 +2,346 @@
 
 ## Overview
 
-This document provides a comprehensive guide to the technical analysis tools implemented in the trading bot. It covers the workings, mathematical formulas, and configuration guidelines for each tool.
+The technical analysis component is implemented through a specialized Technical Analysis Agent in the Swarm framework. This agent analyzes market data using various technical indicators and provides trading signals to the system.
 
-## Technical Analysis Tools
+## Agent Implementation
 
-### 1. Simple Moving Average (SMA)
+```python
+technical_agent = Agent(
+    name="Technical Analysis Agent",
+    instructions="""You are a technical analysis expert. Analyze market data using:
+    - Moving averages (SMA, EMA)
+    - Momentum indicators (RSI, MACD)
+    - Volatility indicators (Bollinger Bands)
+    - Volume analysis
+    Provide clear trading signals based on technical patterns."""
+)
+```
 
-**Description**: The Simple Moving Average (SMA) is a widely used technical indicator that calculates the average of a selected range of prices, usually closing prices, by the number of periods in that range.
+## Market Data Processing
 
-**Formula**:
-\[ \text{SMA} = \frac{\sum \text{Price}}{n} \]
-where \( n \) is the number of periods.
+### Data Structure
+```python
+market_data_dict = {
+    "close": [],       # List of closing prices
+    "high": [],        # List of high prices
+    "low": [],         # List of low prices
+    "volume": [],      # List of volume data
+    "timestamp": []    # List of timestamps
+}
+```
 
-**Configuration**:
-- `period`: Number of periods for SMA calculation (default: 20).
+### Data Validation
+- Checks for data presence
+- Validates price values
+- Ensures synchronized data
+- Handles missing values
 
-### 2. Exponential Moving Average (EMA)
+## Technical Indicators
 
-**Description**: The Exponential Moving Average (EMA) is a type of moving average that places a greater weight and significance on the most recent data points.
+### 1. Relative Strength Index (RSI)
 
-**Formula**:
-\[ \text{EMA} = \text{Price}_{\text{today}} \times \left( \frac{2}{n+1} \right) + \text{EMA}_{\text{yesterday}} \times \left( 1 - \frac{2}{n+1} \right) \]
-where \( n \) is the number of periods.
+```python
+def _calculate_rsi(self, df, period=14):
+    """
+    Calculate RSI indicator
+    
+    Args:
+        df (pd.DataFrame): Market data
+        period (int): RSI period
+    
+    Returns:
+        float: RSI value or None if insufficient data
+    """
+```
 
-**Configuration**:
-- `period`: Number of periods for EMA calculation (default: 20).
+Configuration:
+```yaml
+technical_analysis:
+  indicators:
+    rsi:
+      period: 14
+      overbought: 70
+      oversold: 30
+```
 
-### 3. Volume Weighted Average Price (VWAP)
+### 2. Moving Averages
 
-**Description**: The Volume Weighted Average Price (VWAP) is a trading benchmark that gives the average price a security has traded at throughout the day, based on both volume and price.
+Supports multiple types:
+- Simple Moving Average (SMA)
+- Exponential Moving Average (EMA)
 
-**Formula**:
-\[ \text{VWAP} = \frac{\sum (\text{Typical Price} \times \text{Volume})}{\sum \text{Volume}} \]
+Configuration:
+```yaml
+technical_analysis:
+  indicators:
+    sma_periods: [20, 50, 200]
+    ema_periods: [12, 26]
+```
 
-**Configuration**:
-- `period`: Number of periods for VWAP calculation (default: 14).
+### 3. MACD
 
-### 4. Relative Strength Index (RSI)
+Configuration:
+```yaml
+technical_analysis:
+  indicators:
+    macd:
+      fast_period: 12
+      slow_period: 26
+      signal_period: 9
+```
 
-**Description**: The Relative Strength Index (RSI) is a momentum oscillator that measures the speed and change of price movements.
+### 4. Bollinger Bands
 
-**Formula**:
-\[ \text{RSI} = 100 - \frac{100}{1 + \frac{\text{Average Gain}}{\text{Average Loss}}} \]
+Configuration:
+```yaml
+technical_analysis:
+  indicators:
+    bollinger_bands:
+      period: 20
+      std_dev: 2
+```
 
-**Configuration**:
-- `period`: Number of periods for RSI calculation (default: 14).
+## Signal Generation
 
-### 5. Moving Average Convergence Divergence (MACD)
+### Technical Analysis Process
 
-**Description**: The Moving Average Convergence Divergence (MACD) is a trend-following momentum indicator that shows the relationship between two moving averages of a security's price.
+```python
+def analyze_technical(market_data_dict):
+    """
+    Analyze technical indicators and patterns
+    
+    Args:
+        market_data_dict (dict): Market data dictionary
+    
+    Returns:
+        dict: Analysis results including:
+            - price: Current price
+            - signal: Trading signal
+            - confidence: Signal confidence
+    """
+```
 
-**Formula**:
-\[ \text{MACD Line} = \text{EMA}_{\text{fast}} - \text{EMA}_{\text{slow}} \]
-\[ \text{Signal Line} = \text{EMA of MACD Line} \]
+Components:
+1. Data preparation
+2. Indicator calculation
+3. Pattern recognition
+4. Signal generation
 
-**Configuration**:
-- `fast_period`: Number of periods for fast EMA (default: 12).
-- `slow_period`: Number of periods for slow EMA (default: 26).
-- `signal_period`: Number of periods for signal line (default: 9).
+### Signal Types
 
-### 6. Bollinger Bands
+- "buy": Strong buy signal
+- "sell": Strong sell signal
+- "hold": Neutral signal
 
-**Description**: Bollinger Bands are a volatility indicator that consists of a middle band (SMA) and two outer bands (standard deviations above and below the SMA).
+### Confidence Levels
 
-**Formula**:
-\[ \text{Upper Band} = \text{SMA} + (k \times \text{Standard Deviation}) \]
-\[ \text{Lower Band} = \text{SMA} - (k \times \text{Standard Deviation}) \]
+Confidence score (0.0 to 1.0) based on:
+- Indicator agreement
+- Pattern strength
+- Data quality
+- Market conditions
 
-**Configuration**:
-- `period`: Number of periods for SMA (default: 20).
-- `std_dev`: Number of standard deviations for bands (default: 2).
+## Integration with Trading System
 
-### 7. Average True Range (ATR)
+### 1. Market Data Integration
 
-**Description**: The Average True Range (ATR) is a volatility indicator that measures the degree of price movement for a given period.
+```python
+def process_market_data(market_data, symbol, logger):
+    """
+    Process and validate market data
+    
+    Args:
+        market_data (dict): Raw market data
+        symbol (str): Stock symbol
+        logger: Logger instance
+    
+    Returns:
+        pd.DataFrame: Processed market data
+    """
+```
 
-**Formula**:
-\[ \text{ATR} = \text{Average}(\text{True Range}) \]
-where True Range is the greatest of:
-- Current high minus the current low
-- Absolute value of the current high minus the previous close
-- Absolute value of the current low minus the previous close
+### 2. Trading Decisions
 
-**Configuration**:
-- `period`: Number of periods for ATR calculation (default: 14).
+Technical analysis contributes to trading decisions through:
+- Signal strength
+- Confidence levels
+- Risk assessment
+- Entry/exit timing
 
-### 8. Average Directional Index (ADX)
+## Configuration
 
-**Description**: The Average Directional Index (ADX) is a trend indicator that quantifies the strength of a trend.
+### Indicator Parameters
 
-**Formula**:
-\[ \text{ADX} = \text{Average}(\text{DX}) \]
-where DX is calculated as:
-\[ \text{DX} = 100 \times \frac{|\text{DI+} - \text{DI-}|}{\text{DI+} + \text{DI-}} \]
+```yaml
+technical_analysis:
+  indicators:
+    sma_periods: [20, 50, 200]
+    ema_periods: [12, 26]
+    rsi:
+      period: 14
+      overbought: 70
+      oversold: 30
+    macd:
+      fast_period: 12
+      slow_period: 26
+      signal_period: 9
+    bollinger_bands:
+      period: 20
+      std_dev: 2
+    volume_ma_period: 20
+```
 
-**Configuration**:
-- `period`: Number of periods for ADX calculation (default: 14).
+### Signal Thresholds
 
-### 9. Commodity Channel Index (CCI)
+```yaml
+agent_system:
+  confidence_thresholds:
+    technical: 0.7
+  signal_weights:
+    technical: 0.7
+```
 
-**Description**: The Commodity Channel Index (CCI) is a momentum-based oscillator that measures the deviation of the price from its average price.
+## Error Handling
 
-**Formula**:
-\[ \text{CCI} = \frac{\text{Typical Price} - \text{SMA}}{0.015 \times \text{Mean Deviation}} \]
-where Typical Price is calculated as:
-\[ \text{Typical Price} = \frac{\text{High} + \text{Low} + \text{Close}}{3} \]
+### Data Errors
+- Insufficient data
+- Invalid values
+- Missing fields
+- Synchronization issues
 
-**Configuration**:
-- `period`: Number of periods for CCI calculation (default: 20).
+### Calculation Errors
+- Division by zero
+- Invalid periods
+- Numerical overflow
+- NaN/Infinity handling
 
-## Sentiment Analysis
+### Recovery Strategies
+- Default values
+- Data interpolation
+- Error logging
+- Graceful degradation
 
-The trading bot also includes sentiment analysis capabilities through the QualitativeAnalysis class. This analyzes market sentiment using:
+## Performance Optimization
 
-1. News Articles Analysis
-   - Fetches recent news articles about the stock
-   - Analyzes sentiment of article titles and descriptions
-   - Uses TextBlob for natural language processing
+### Calculation Efficiency
+- Vectorized operations
+- Cached results
+- Optimized algorithms
+- Resource management
 
-2. Social Media Analysis
-   - Fetches recent tweets about the stock
-   - Analyzes sentiment of tweet content
-   - Aggregates social media sentiment
+### Memory Management
+- Data structure optimization
+- Resource cleanup
+- Memory monitoring
+- Efficient updates
 
-The sentiment analysis returns a score between -1 (extremely negative) and 1 (extremely positive), which can be used alongside technical indicators for trading decisions.
+## Usage Example
 
-## Conclusion
+```python
+from src.trading.trading_agents import TradingSwarm
 
-This document provides an overview of the technical and sentiment analysis tools implemented in the trading bot. Each tool's description, mathematical formula, and configuration guidelines are provided to help users understand and utilize these tools effectively.
+# Initialize trading swarm
+config = load_config()
+trading_swarm = TradingSwarm(config)
+
+# Prepare market data
+market_data_dict = {
+    "close": market_data["close"].tolist(),
+    "high": market_data["high"].tolist(),
+    "low": market_data["low"].tolist(),
+    "volume": market_data["volume"].tolist(),
+    "timestamp": [str(ts) for ts in market_data.index.tolist()]
+}
+
+# Get technical analysis
+technical_message = {
+    "role": "user",
+    "content": f"Analyze technical indicators for AAPL. Market data: {json.dumps(market_data_dict)}. Return response as JSON."
+}
+technical_response = trading_swarm.client.run(
+    agent=trading_swarm.technical_agent,
+    messages=[technical_message]
+)
+
+# Parse response
+technical_data = trading_swarm._parse_agent_response(technical_response)
+```
+
+## Monitoring
+
+### Performance Metrics
+- Signal accuracy
+- Calculation time
+- Memory usage
+- Error rates
+
+### System Health
+- Data quality
+- Calculation status
+- Resource usage
+- Error tracking
+
+## Best Practices
+
+### 1. Data Management
+- Regular updates
+- Proper validation
+- Error handling
+- Resource cleanup
+
+### 2. Signal Generation
+- Multiple confirmations
+- Trend validation
+- Volume confirmation
+- Risk assessment
+
+### 3. Integration
+- Clear communication
+- Error handling
+- Performance monitoring
+- Resource management
+
+## Troubleshooting
+
+Common issues and solutions:
+
+1. Data Quality
+   - Check data completeness
+   - Verify synchronization
+   - Validate values
+   - Monitor updates
+
+2. Calculation Issues
+   - Verify periods
+   - Check formulas
+   - Monitor resources
+   - Track errors
+
+3. Integration Problems
+   - Check data flow
+   - Verify formats
+   - Monitor timing
+   - Track performance
+
+## Future Enhancements
+
+Potential improvements:
+
+1. Indicators
+   - Additional indicators
+   - Custom calculations
+   - Advanced patterns
+   - Machine learning
+
+2. Performance
+   - Faster calculations
+   - Better memory usage
+   - Improved accuracy
+   - Real-time updates
+
+3. Integration
+   - More data sources
+   - Better visualization
+   - Advanced analytics
+   - Custom signals

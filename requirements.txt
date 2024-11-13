@@ -6,3 +6,4 @@ unittest2
 requests
 argparse
 textblob
+git+https://github.com/openai/swarm.git

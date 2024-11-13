@@ -2,249 +2,313 @@
 
 ## Overview
 
-The trading logic module implements the core decision-making algorithms for the trading system. It combines technical analysis, sentiment analysis, and risk management to generate trading signals and execute orders.
+The trading logic is implemented through a multi-agent system using OpenAI's Swarm framework. Each agent specializes in a specific aspect of trading, working together to make informed trading decisions.
 
-## Components
+## Agent Architecture
 
-### 1. Signal Generation
+### 1. Technical Analysis Agent
 
-#### Technical Signals
-- Combines multiple technical indicators:
-  - RSI for overbought/oversold conditions
-  - MACD for trend direction
-  - Bollinger Bands for volatility
-  - Moving averages for trend confirmation
-  
 ```python
-def generate_technical_signal(self, market_data):
+technical_agent = Agent(
+    name="Technical Analysis Agent",
+    instructions="""You are a technical analysis expert. Analyze market data using:
+    - Moving averages (SMA, EMA)
+    - Momentum indicators (RSI, MACD)
+    - Volatility indicators (Bollinger Bands)
+    - Volume analysis
+    Provide clear trading signals based on technical patterns."""
+)
+```
+
+Responsibilities:
+- Analyzes price patterns
+- Calculates technical indicators
+- Generates technical trading signals
+- Provides confidence levels
+
+### 2. Sentiment Analysis Agent
+
+```python
+sentiment_agent = Agent(
+    name="Sentiment Analysis Agent",
+    instructions="""You are a sentiment analysis expert. Analyze market sentiment using:
+    - News articles
+    - Social media trends
+    - Market commentary
+    Provide clear sentiment signals based on qualitative data."""
+)
+```
+
+Responsibilities:
+- Analyzes news sentiment
+- Processes social media data
+- Evaluates market sentiment
+- Provides sentiment scores
+
+### 3. Risk Management Agent
+
+```python
+risk_agent = Agent(
+    name="Risk Management Agent",
+    instructions="""You are a risk management expert. Monitor and control:
+    - Position sizes
+    - Portfolio exposure
+    - Stop loss levels
+    - Risk/reward ratios
+    Ensure all trades comply with risk parameters."""
+)
+```
+
+Responsibilities:
+- Validates trade parameters
+- Enforces position limits
+- Monitors risk exposure
+- Manages stop losses
+
+### 4. Trade Execution Agent
+
+```python
+execution_agent = Agent(
+    name="Trade Execution Agent",
+    instructions="""You are a trade execution expert. Handle:
+    - Order placement
+    - Position management
+    - Trade timing
+    Execute trades efficiently while minimizing slippage."""
+)
+```
+
+Responsibilities:
+- Places orders
+- Manages positions
+- Optimizes execution
+- Tracks trade status
+
+## Trading Process
+
+### 1. Market Data Processing
+
+```python
+def analyze_trading_opportunity(self, symbol, market_data):
     """
-    Generates a trading signal based on technical analysis
-    Returns: float between -1 (strong sell) and 1 (strong buy)
+    Analyze trading opportunity using all agents
+    
+    Args:
+        symbol (str): Stock symbol
+        market_data (pd.DataFrame): Market data
+    
+    Returns:
+        dict: Trading decision with status and details
     """
 ```
 
-#### Sentiment Signals
-- Processes sentiment data from:
-  - News articles
-  - Social media
-  - Market sentiment indicators
-  
+Process:
+1. Validates market data
+2. Converts data to required format
+3. Distributes to relevant agents
+4. Aggregates agent responses
+
+### 2. Technical Analysis
+
 ```python
-def generate_sentiment_signal(self, sentiment_data):
+def analyze_technical(market_data_dict):
     """
-    Generates a trading signal based on sentiment analysis
-    Returns: float between -1 (very negative) and 1 (very positive)
+    Analyze technical indicators and patterns
+    
+    Returns:
+        dict: Technical analysis results including signal and confidence
     """
 ```
 
-#### Combined Signal
-- Weighted combination of signals:
-  - Technical analysis weight
-  - Sentiment analysis weight
-  - Historical performance weight
-  
+Components:
+- Price analysis
+- Indicator calculations
+- Pattern recognition
+- Signal generation
+
+### 3. Sentiment Analysis
+
 ```python
-def generate_combined_signal(self, technical_signal, sentiment_signal):
+def analyze_sentiment(symbol):
     """
-    Combines different signals into a final trading signal
-    Returns: float between -1 (strong sell) and 1 (strong buy)
+    Analyze market sentiment
+    
+    Returns:
+        dict: Sentiment analysis results
     """
 ```
 
-### 2. Position Sizing
+Components:
+- News sentiment
+- Social sentiment
+- Market sentiment
+- Sentiment aggregation
 
-#### Risk Assessment
-- Position size calculation based on:
-  - Account equity
-  - Risk per trade
-  - Market volatility
-  - Current exposure
+### 4. Risk Assessment
 
 ```python
-def calculate_position_size(self, signal_strength, volatility):
+def check_risk_limits(trade_params):
     """
-    Determines appropriate position size based on risk parameters
-    Returns: int (number of shares to trade)
+    Verify trade against risk parameters
+    
+    Returns:
+        dict: Risk assessment results
     """
 ```
 
-#### Risk Limits
-- Maximum position size
-- Maximum account exposure
-- Maximum loss per trade
-- Sector exposure limits
+Checks:
+- Position size limits
+- Daily loss limits
+- Portfolio exposure
+- Risk/reward ratio
 
-### 3. Order Management
-
-#### Entry Rules
-- Signal strength thresholds
-- Market condition filters
-- Time-of-day restrictions
-- Liquidity requirements
+### 5. Trade Execution
 
 ```python
-def validate_entry(self, symbol, signal, market_conditions):
+def execute_trade(trade_params):
     """
-    Validates if an entry order should be placed
-    Returns: bool
+    Execute the trade
+    
+    Returns:
+        dict: Execution results
     """
 ```
 
-#### Exit Rules
-- Take profit levels
-- Stop loss levels
-- Time-based exits
-- Signal reversal exits
-
-```python
-def validate_exit(self, position, market_conditions):
-    """
-    Validates if an exit order should be placed
-    Returns: bool
-    """
-```
-
-### 4. Risk Management
-
-#### Position Management
-- Stop loss placement
-- Take profit targets
-- Position scaling
-- Hedging rules
-
-#### Portfolio Management
-- Sector allocation
-- Correlation management
-- Beta-adjusted exposure
-- VaR limits
-
-### 5. Performance Monitoring
-
-#### Trade Analysis
-- Win/loss ratio
-- Average profit/loss
-- Sharpe ratio
-- Maximum drawdown
-
-#### Strategy Adjustment
-- Parameter optimization
-- Weight adjustment
-- Risk limit adaptation
-- Signal threshold tuning
+Process:
+- Order creation
+- Execution timing
+- Position tracking
+- Status monitoring
 
 ## Configuration
 
-### Risk Parameters
+### Risk Management Parameters
+
 ```yaml
-trading_logic:
-  risk:
-    max_position_size: 1000
-    max_account_exposure: 0.25
-    max_loss_per_trade: 0.02
-    stop_loss_atr_multiple: 2.0
+risk_management:
+  position_limits:
+    max_position_size: 100
+    max_portfolio_exposure: 0.25
+  loss_limits:
+    daily_loss_limit: 1000
+    max_drawdown: 0.15
+  trade_frequency:
+    min_time_between_trades: 300
+    max_daily_trades: 10
 ```
 
-### Signal Parameters
+### Agent System Configuration
+
 ```yaml
-trading_logic:
-  signals:
-    technical_weight: 0.6
-    sentiment_weight: 0.4
-    min_signal_strength: 0.3
-    confirmation_required: true
-```
-
-### Time Filters
-```yaml
-trading_logic:
-  time_filters:
-    trading_start: "09:30"
-    trading_end: "16:00"
-    avoid_first_minutes: 5
-    avoid_last_minutes: 5
-```
-
-## Integration
-
-The trading logic integrates with:
-1. Technical analysis module for indicator values
-2. Sentiment analysis module for market sentiment
-3. IB Connector for order execution
-4. Risk management system for position sizing
-5. Dashboard for performance monitoring
-
-## Usage Example
-
-```python
-from src.trading.trading_logic import TradingLogic
-
-# Initialize trading logic
-logic = TradingLogic(
-    config_path="config/trading_logic.yaml",
-    risk_manager=risk_manager,
-    technical_analyzer=tech_analyzer,
-    sentiment_analyzer=sent_analyzer
-)
-
-# Process market update
-signal = logic.process_market_update(
-    symbol="AAPL",
-    market_data=market_data,
-    sentiment_data=sentiment_data
-)
-
-# Generate trading decision
-decision = logic.generate_trading_decision(
-    symbol="AAPL",
-    signal=signal,
-    portfolio=current_portfolio
-)
-
-# Execute trading decision
-if decision.should_trade:
-    order = logic.create_order(decision)
-    logic.execute_order(order)
+agent_system:
+  update_interval: 60
+  confidence_thresholds:
+    technical: 0.7
+    sentiment: 0.6
+    combined: 0.65
+  signal_weights:
+    technical: 0.7
+    sentiment: 0.3
 ```
 
 ## Error Handling
 
-### Signal Errors
-- Invalid data handling
-- Signal calculation errors
-- Threshold violations
+### Market Data Errors
+- Missing data handling
+- Invalid data detection
+- Synchronization issues
 
-### Order Errors
-- Execution failures
-- Position size errors
-- Risk limit violations
+### Trading Errors
+- Order rejection handling
+- Position limit violations
+- Risk limit breaches
 
 ### System Errors
-- Data feed issues
-- Calculation errors
-- Integration failures
+- Connection issues
+- Agent failures
+- State management
 
-## Performance Optimization
+## Performance Monitoring
 
-### Calculation Efficiency
-- Cached calculations
-- Parallel processing
-- Optimized algorithms
-
-### Memory Management
-- Efficient data structures
-- Resource cleanup
-- Memory monitoring
-
-## Logging and Monitoring
-
-### Trade Logging
-- Entry/exit reasons
-- Signal components
+### Trade Tracking
+- Entry/exit prices
+- Position sizes
+- P&L tracking
 - Risk metrics
-- Performance stats
 
-### System Monitoring
-- Signal quality
+### System Metrics
+- Agent performance
 - Decision accuracy
 - Risk compliance
-- System health
+- Execution quality
+
+## Integration
+
+The trading logic integrates with:
+1. IB Connector for market data and execution
+2. Configuration management
+3. Logging system
+4. Performance monitoring
+
+## Usage Example
+
+```python
+from src.trading.trading_agents import TradingSwarm
+
+# Initialize trading swarm
+config = load_config()
+trading_swarm = TradingSwarm(config)
+
+# Process trading opportunity
+result = trading_swarm.analyze_trading_opportunity(
+    symbol="AAPL",
+    market_data=market_data
+)
+
+# Handle result
+if result['status'] == 'executed':
+    print(f"Trade executed: {result}")
+elif result['status'] == 'rejected':
+    print(f"Trade rejected: {result['reason']}")
+```
+
+## Best Practices
+
+1. Data Handling
+   - Validate all input data
+   - Ensure data synchronization
+   - Handle missing data appropriately
+
+2. Risk Management
+   - Always check risk limits
+   - Monitor position sizes
+   - Track exposure levels
+
+3. Agent Communication
+   - Clear message formats
+   - Proper error handling
+   - State management
+
+4. System Monitoring
+   - Log all decisions
+   - Track performance metrics
+   - Monitor system health
+
+## Troubleshooting
+
+Common issues and solutions:
+
+1. Signal Generation
+   - Verify data quality
+   - Check indicator calculations
+   - Validate signal thresholds
+
+2. Risk Management
+   - Check limit configurations
+   - Verify position calculations
+   - Monitor risk metrics
+
+3. Trade Execution
+   - Verify order parameters
+   - Check execution status
+   - Monitor fill prices

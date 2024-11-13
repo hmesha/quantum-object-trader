@@ -21,16 +21,23 @@ class TradingLogic:
         # Validate order parameters
         if quantity <= 0:
             self.logger.error("Quantity must be greater than zero")
-            return
+            return None
         if order_type in ["limit", "stop"] and price is None:
             self.logger.error("Price must be specified for limit/stop orders")
-            return
+            return None
+
+        # Check risk management rules
+        if not self.manage_risk(symbol, quantity, price or 0):
+            self.logger.warning("Trade rejected by risk management")
+            return None
 
         trade = self.api_connector.placeOrder(symbol, order_type, quantity, price)
         if trade:
             self.logger.info(f"Trade executed: {trade}")
+            return trade
         else:
             self.logger.error("Trade execution failed")
+            return None
 
     def evaluate_trading_opportunity(self, symbol, market_data):
         """
@@ -40,13 +47,13 @@ class TradingLogic:
         :param market_data: The market data to evaluate
         :return: Combined signal score
         """
-        if not market_data:
+        if market_data is None or market_data.empty:
             self.logger.error("Failed to retrieve market data")
             return None
 
         technical_signal = self.technical_analysis.evaluate(market_data)
 
-        if technical_signal:
+        if technical_signal is not None:
             combined_signal = technical_signal / 2
             return combined_signal
         return None
@@ -64,15 +71,20 @@ class TradingLogic:
         daily_loss_limit = self.config['trading']['daily_loss_limit']
         max_trade_frequency = self.config['trading']['max_trade_frequency']
 
+        # Check position size limit
         if position_size > max_position_size:
             self.logger.warning(f"Position size for {symbol} exceeds maximum limit")
             return False
 
-        if self.calculate_daily_loss() > daily_loss_limit:
+        # Check daily loss limit
+        daily_loss = self.calculate_daily_loss()
+        if daily_loss > daily_loss_limit:
             self.logger.warning("Daily loss limit exceeded")
             return False
 
-        if self.calculate_trade_frequency(symbol) > max_trade_frequency:
+        # Check trade frequency limit
+        trade_frequency = self.calculate_trade_frequency(symbol)
+        if trade_frequency > max_trade_frequency:
             self.logger.warning("Maximum trade frequency exceeded")
             return False
 

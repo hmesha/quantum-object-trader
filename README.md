@@ -1,137 +1,228 @@
 # Quantum Trader
 
-🤖 An intelligent stock trading bot combining technical & sentiment analysis with Interactive Brokers TWS API integration
+🤖 An intelligent autonomous trading system using multi-agent orchestration with OpenAI's Swarm framework
 
-## Description
+## Overview
 
-Quantum Trader is a high-performance, production-ready algorithmic trading system that combines real-time technical analysis with natural language processing for sentiment-driven trading decisions. Built with Python, it features sub-100ms latency, comprehensive risk management, and a color-coded CLI interface for monitoring live trading operations.
+Quantum Trader is a sophisticated algorithmic trading system that leverages Interactive Brokers' API and OpenAI's Swarm framework to make trading decisions. The system uses a multi-agent approach where specialized agents collaborate to analyze market data, assess risks, and execute trades.
 
 ## Key Features
 
-- Real-time market data processing with <100ms latency
-- Advanced technical indicators:
-  - Simple Moving Average (SMA)
-  - Exponential Moving Average (EMA)
-  - Volume Weighted Average Price (VWAP)
-  - Relative Strength Index (RSI)
-  - Moving Average Convergence Divergence (MACD)
-  - Bollinger Bands
-  - Average True Range (ATR)
-  - Average Directional Index (ADX)
-  - Commodity Channel Index (CCI)
-- Sentiment analysis using:
-  - News articles analysis via NewsAPI
-  - Social media sentiment via Twitter API
-  - Natural language processing with TextBlob
-- Interactive Brokers TWS API integration with auto-reconnection
-- Color-coded CLI dashboard for real-time monitoring
-- Comprehensive testing suite with >95% coverage
+### Multi-Agent Architecture
+
+1. **Technical Analysis Agent**
+   - Analyzes market data using technical indicators
+   - Identifies trading patterns and signals
+   - Provides technical-based recommendations
+
+2. **Sentiment Analysis Agent**
+   - Analyzes market sentiment from news and social media
+   - Evaluates overall market sentiment
+   - Provides sentiment-based signals
+
+3. **Risk Management Agent**
+   - Monitors position sizes and exposure
+   - Enforces risk limits and parameters
+   - Approves or rejects potential trades
+
+4. **Trade Execution Agent**
+   - Handles order placement and management
+   - Optimizes trade timing and execution
+   - Manages active positions
+
+### Market Data Processing
+
+- Real-time price updates
+- Synchronized data management
+- Volume tracking
+- High/low price monitoring
+
+### Risk Management
+
+- Position size limits
+- Daily loss limits
+- Portfolio exposure monitoring
+- Trade frequency controls
+
+### System Monitoring
+
+- Detailed logging
+- Performance tracking
+- Error handling
+- System health monitoring
+
+## Prerequisites
+
+Before running the system, ensure you have:
+
+1. **Python 3.10+**
+
+2. **Interactive Brokers TWS or IB Gateway**
+   - Download and install from [Interactive Brokers](https://www.interactivebrokers.com)
+   - Enable API connections in TWS/Gateway settings
+   - Configure the socket port (default: 7497)
+   - Enable auto-restart in TWS/Gateway
+   - Disable 'Read-Only API' in TWS/Gateway configuration
+
+3. **Market Data Subscriptions**
+   - Appropriate market data subscriptions for your symbols
+   - Permissions for the markets you want to trade
 
 ## Installation
 
-### Prerequisites
-
-- Python 3.11+
-- Virtual environment tool (e.g., `venv`, `virtualenv`, `conda`)
-- Git
-- Interactive Brokers Trader Workstation (TWS) or IB Gateway
-- NewsAPI key for news sentiment analysis
-- Twitter API keys for social media sentiment analysis
-
-### Steps
-
 1. Clone the repository:
-
-```sh
+```bash
 git clone https://github.com/zoharbabin/quantum-trader.git
 cd quantum-trader
 ```
 
-2. Set up a virtual environment:
-
-```sh
-# Using venv
-python3 -m venv venv
+2. Create and activate a virtual environment:
+```bash
+python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-
-# Using virtualenv
-virtualenv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-
-# Using conda
-conda create --name trading_bot python=3.11
-conda activate trading_bot
 ```
 
-3. Install Interactive Brokers TWS API:
-   - Download the IBAPI from the official Interactive Brokers GitHub page: https://interactivebrokers.github.io/
-   - Follow the installation instructions in the downloaded package
-   - Ensure the TWS API is properly set up and configured in your environment
-
-4. Install other dependencies:
-
-```sh
+3. Install dependencies:
+```bash
 pip install -r requirements.txt
 ```
 
-5. Set up environment variables:
-
-Create a `.env` file in the root directory of the project:
-
-```sh
-# .env file
-NEWS_API_KEY=your_news_api_key
-TWITTER_API_KEY=your_twitter_api_key
-TWITTER_API_SECRET=your_twitter_api_secret
+4. Install OpenAI Swarm:
+```bash
+pip install git+https://github.com/openai/swarm.git
 ```
 
-6. Configure the bot:
+## Configuration
 
-Modify the configuration file in `src/config/config.yaml` according to your requirements.
+The system is configured through `src/config/config.yaml`. Key sections include:
+
+### API Configuration
+```yaml
+api:
+  tws_endpoint: "127.0.0.1"
+  port: 7497
+```
+
+### Risk Management
+```yaml
+risk_management:
+  position_limits:
+    max_position_size: 100
+  loss_limits:
+    daily_loss_limit: 1000
+```
+
+### Agent System
+```yaml
+agent_system:
+  update_interval: 60
+  confidence_thresholds:
+    technical: 0.7
+    sentiment: 0.6
+```
 
 ## Usage
 
-You can run the trading bot using the CLI interface:
+### Starting the System
 
-```sh
-python -m src.cli.cli_interface --symbol AAPL --order_type market --quantity 10
+```bash
+python -m src.cli.cli_interface --symbols AAPL MSFT GOOGL --mode paper
 ```
+
+Required arguments:
+- `--symbols`: List of stock symbols to trade
+- `--mode`: Trading mode ('paper' or 'live', default: paper)
+
+### Expected Behavior
+
+1. **Startup**
+   - System checks prerequisites
+   - Connects to Interactive Brokers
+   - Initializes trading agents
+   - Begins market data processing
+
+2. **Market Data**
+   - Receives real-time price updates
+   - Processes synchronized data
+   - Tracks volume and price levels
+
+3. **Trading Decisions**
+   - Analyzes technical indicators
+   - Evaluates market sentiment
+   - Assesses risk parameters
+   - Makes trading decisions
+
+4. **Risk Management**
+   - Enforces position limits
+   - Monitors risk exposure
+   - Validates all trades
+   - Manages stop losses
+
+## System Output
+
+The system provides detailed logging:
+
+```
+2024-11-10 18:24:20,523 - INFO - === Quantum Trader Starting ===
+2024-11-10 18:24:20,523 - INFO - Mode: paper
+2024-11-10 18:24:20,523 - INFO - Symbols: ['AAPL', 'MSFT', 'GOOGL']
+...
+```
+
+## Troubleshooting
+
+### Common Issues
+
+1. **Connection Problems**
+   - Verify TWS/Gateway is running
+   - Check API connection settings
+   - Confirm port configuration
+   - Ensure proper permissions
+
+2. **Market Data Issues**
+   - Verify market data subscriptions
+   - Check symbol validity
+   - Confirm market hours
+   - Monitor data synchronization
+
+3. **Trading Issues**
+   - Check risk limits
+   - Verify account permissions
+   - Monitor order status
+   - Check execution reports
+
+### Error Messages
+
+The system provides clear error messages with:
+- Error description
+- Context information
+- Suggested solutions
+- Debug details (in verbose mode)
 
 ## Documentation
 
-Comprehensive documentation for all system components:
+Detailed documentation is available in the `docs` directory:
 
-- [Technical Analysis](./docs/technical_analysis.md) - Technical indicators and their implementation
-- [Sentiment Analysis](./docs/sentiment_analysis.md) - News and social media sentiment analysis
-- [Interactive Brokers Integration](./docs/ib_connector.md) - TWS API integration and order management
-- [CLI Interface](./docs/cli_interface.md) - Command-line interface usage and options
-- [Dashboard](./docs/dashboard.md) - Real-time monitoring interface
-- [Trading Logic](./docs/trading_logic.md) - Core trading algorithms and risk management
+- [CLI Interface](docs/cli_interface.md)
+- [IB Connector](docs/ib_connector.md)
+- [Trading Logic](docs/trading_logic.md)
+- [Technical Analysis](docs/technical_analysis.md)
+- [Sentiment Analysis](docs/sentiment_analysis.md)
 
-## Unit Tests
+## Testing
 
-The `tests` directory contains unit tests for various components of the trading bot. To run the tests:
+Run the test suite:
 
-```sh
+```bash
 python -m unittest discover tests
 ```
 
-## API Integration
+## Contributing
 
-The `src/api/ib_connector.py` file handles Interactive Brokers TWS API integration, including:
-- Connection management and auto-reconnection
-- Order execution and monitoring
-- Real-time market data streaming
-- Error handling and rate limit monitoring
-
-## Real-time Dashboard
-
-The `src/cli/dashboard.py` provides a color-coded CLI interface for monitoring:
-- Live trading operations
-- Technical indicator values
-- Sentiment analysis scores
-- Position status and P&L
-- Order execution status
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Submit a pull request
 
 ## License
 
