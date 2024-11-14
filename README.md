@@ -1,65 +1,48 @@
 # Quantum Trader
 
-🤖 An intelligent autonomous trading system using multi-agent orchestration with OpenAI's Swarm framework
+🤖 An intelligent autonomous trading system using a multi-agent architecture for algorithmic trading via Interactive Brokers
 
 ## Overview
 
-Quantum Trader is a sophisticated algorithmic trading system that leverages Interactive Brokers' API and OpenAI's Swarm framework to make trading decisions. The system uses a multi-agent approach where specialized agents collaborate to analyze market data, assess risks, and execute trades.
+Quantum Trader is a sophisticated algorithmic trading system that leverages Interactive Brokers' API to make trading decisions. The system uses a multi-agent approach where specialized components collaborate to analyze market data, assess risks, and execute trades.
 
 ## Key Features
 
 ### Multi-Agent Architecture
 
 1. **Technical Analysis Agent**
-   - Analyzes market data using technical indicators
+   - Analyzes market data using multiple indicators:
+     - SMA (20, 50, 200 periods)
+     - EMA (12, 26 periods)
+     - RSI
+     - MACD
+     - Bollinger Bands
    - Identifies trading patterns and signals
-   - Provides technical-based recommendations
 
 2. **Sentiment Analysis Agent**
    - Analyzes market sentiment from news and social media
-   - Evaluates overall market sentiment
-   - Provides sentiment-based signals
+   - Monitors multiple platforms (Twitter, Reddit)
+   - Provides weighted sentiment signals
 
-3. **Risk Management Agent**
-   - Monitors position sizes and exposure
-   - Enforces risk limits and parameters
-   - Approves or rejects potential trades
+3. **Risk Management System**
+   - Position size and portfolio exposure limits
+   - Daily loss limits and drawdown protection
+   - Trade frequency controls
+   - Dynamic stop-loss using ATR
 
-4. **Trade Execution Agent**
-   - Handles order placement and management
-   - Optimizes trade timing and execution
-   - Manages active positions
-
-### Market Data Processing
-
-- Real-time price updates
-- Synchronized data management
-- Volume tracking
-- High/low price monitoring
-
-### Risk Management
-
-- Position size limits
-- Daily loss limits
-- Portfolio exposure monitoring
-- Trade frequency controls
-
-### System Monitoring
-
-- Detailed logging
-- Performance tracking
-- Error handling
-- System health monitoring
+4. **Trade Execution System**
+   - Supports market and limit orders
+   - Slippage tolerance controls
+   - Position sizing based on risk or fixed size
+   - Order timeout management
 
 ## Prerequisites
-
-Before running the system, ensure you have:
 
 1. **Python 3.10+**
 
 2. **Interactive Brokers TWS or IB Gateway**
    - Download and install from [Interactive Brokers](https://www.interactivebrokers.com)
-   - Enable API connections in TWS/Gateway settings
+   - Enable API connections in TWS/Gateway
    - Configure the socket port (default: 7497)
    - Enable auto-restart in TWS/Gateway
    - Disable 'Read-Only API' in TWS/Gateway configuration
@@ -68,7 +51,7 @@ Before running the system, ensure you have:
    - Appropriate market data subscriptions for your symbols
    - Permissions for the markets you want to trade
 
-## Installation
+## Quick Start
 
 1. Clone the repository:
 ```bash
@@ -87,10 +70,22 @@ source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 pip install -r requirements.txt
 ```
 
-4. Install OpenAI Swarm:
+4. Configure the system:
+   - Review and modify `src/config/config.yaml` for your needs
+   - Key configurations include:
+     - API connection settings
+     - Risk management parameters
+     - Trading execution preferences
+     - Analysis thresholds
+
+5. Start trading:
 ```bash
-pip install git+https://github.com/openai/swarm.git
+python -m src.cli.cli_interface --symbols AAPL MSFT GOOGL --mode paper
 ```
+
+Required arguments:
+- `--symbols`: List of stock symbols to trade
+- `--mode`: Trading mode ('paper' or 'live', default: paper)
 
 ## Configuration
 
@@ -108,65 +103,49 @@ api:
 risk_management:
   position_limits:
     max_position_size: 100
+    max_portfolio_exposure: 0.25
   loss_limits:
     daily_loss_limit: 1000
+    max_drawdown: 0.15
+  trade_frequency:
+    min_time_between_trades: 300
+    max_daily_trades: 10
 ```
 
-### Agent System
+### Technical Analysis
 ```yaml
-agent_system:
-  update_interval: 60
-  confidence_thresholds:
-    technical: 0.7
-    sentiment: 0.6
+technical_analysis:
+  indicators:
+    sma_periods: [20, 50, 200]
+    rsi:
+      period: 14
+      overbought: 70
+      oversold: 30
+    macd:
+      fast_period: 12
+      slow_period: 26
+      signal_period: 9
 ```
 
-## Usage
-
-### Starting the System
-
-```bash
-python -m src.cli.cli_interface --symbols AAPL MSFT GOOGL --mode paper
+### Trading Execution
+```yaml
+execution:
+  order_types: ["market", "limit"]
+  default_order_type: "limit"
+  limit_order_timeout: 60
+  slippage_tolerance: 0.001
 ```
-
-Required arguments:
-- `--symbols`: List of stock symbols to trade
-- `--mode`: Trading mode ('paper' or 'live', default: paper)
-
-### Expected Behavior
-
-1. **Startup**
-   - System checks prerequisites
-   - Connects to Interactive Brokers
-   - Initializes trading agents
-   - Begins market data processing
-
-2. **Market Data**
-   - Receives real-time price updates
-   - Processes synchronized data
-   - Tracks volume and price levels
-
-3. **Trading Decisions**
-   - Analyzes technical indicators
-   - Evaluates market sentiment
-   - Assesses risk parameters
-   - Makes trading decisions
-
-4. **Risk Management**
-   - Enforces position limits
-   - Monitors risk exposure
-   - Validates all trades
-   - Manages stop losses
 
 ## System Output
 
-The system provides detailed logging:
+The system provides detailed logging of all operations:
 
 ```
 2024-11-10 18:24:20,523 - INFO - === Quantum Trader Starting ===
 2024-11-10 18:24:20,523 - INFO - Mode: paper
 2024-11-10 18:24:20,523 - INFO - Symbols: ['AAPL', 'MSFT', 'GOOGL']
-...
+2024-11-10 18:24:20,524 - INFO - Checking Interactive Brokers prerequisites...
+2024-11-10 18:24:20,525 - INFO - Successfully connected to Interactive Brokers
 ```
 
 ## Troubleshooting
@@ -175,29 +154,21 @@ The system provides detailed logging:
 
 1. **Connection Problems**
    - Verify TWS/Gateway is running
-   - Check API connection settings
-   - Confirm port configuration
-   - Ensure proper permissions
+   - Check API connection settings in TWS/Gateway
+   - Confirm port configuration matches config.yaml
+   - Ensure proper permissions in TWS/Gateway
 
 2. **Market Data Issues**
    - Verify market data subscriptions
    - Check symbol validity
    - Confirm market hours
-   - Monitor data synchronization
+   - Monitor data synchronization logs
 
 3. **Trading Issues**
-   - Check risk limits
-   - Verify account permissions
-   - Monitor order status
-   - Check execution reports
-
-### Error Messages
-
-The system provides clear error messages with:
-- Error description
-- Context information
-- Suggested solutions
-- Debug details (in verbose mode)
+   - Check risk limits in config.yaml
+   - Verify account permissions in TWS/Gateway
+   - Monitor order status in logs
+   - Review execution reports
 
 ## Documentation
 
