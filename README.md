@@ -36,6 +36,46 @@ Quantum Trader is a sophisticated algorithmic trading system that leverages Inte
    - Position sizing based on risk or fixed size
    - Order timeout management
 
+## Training Program
+
+A comprehensive training program is included to help you understand and effectively use Quantum Trader.
+
+### Running the Training Program
+
+1. Start the training server:
+```bash
+cd training
+python3 -m http.server 8000
+```
+
+2. Open your web browser and visit: `http://localhost:8000`
+
+### Training Structure
+
+1. **Level 1: Getting Started (Trader - Basic)**
+   - Prerequisites
+   - System Setup
+   - Basic Operations
+   - Risk Management Fundamentals
+
+2. **Level 2: Intermediate Trading**
+   - Advanced configuration
+   - Portfolio management
+   - Technical analysis implementation
+
+3. **Level 3: Advanced Operations**
+   - Custom strategy development
+   - Advanced risk metrics
+   - System optimization
+
+### Training Resources
+
+- Interactive tutorials with step-by-step guidance
+- Practical exercises to reinforce learning
+- Progress tracking
+- Quizzes to test understanding
+- Comprehensive documentation for each module
+
 ## Prerequisites
 
 1. **Python 3.10+**

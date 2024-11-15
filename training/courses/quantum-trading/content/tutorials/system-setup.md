@@ -13,21 +13,21 @@ This tutorial will guide you through setting up your Quantum Trader development 
 1. Visit python.org and download Python 3.10 or higher
 2. Run the installer and ensure "Add Python to PATH" is checked
 3. Verify installation by opening a terminal and running:
-   ```bash
+   ```
    python --version
    ```
 
 ### 2. Repository Setup
 1. Clone the repository:
-   ```bash
+   ```
    git clone https://github.com/zoharbabin/quantum-trader.git
    ```
 2. Navigate to the project directory:
-   ```bash
+   ```
    cd quantum-trader
    ```
 3. Install dependencies:
-   ```bash
+   ```
    pip install -r requirements.txt
    ```
 
