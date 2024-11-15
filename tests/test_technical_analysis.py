@@ -36,6 +36,79 @@ class TestTechnicalAnalysis(unittest.TestCase):
         result = self.ta.evaluate(incomplete_data)
         self.assertIsNone(result)
 
+    def test_calculate_atr_wrapper(self):
+        """Test ATR calculation wrapper method"""
+        # Test with valid data
+        atr = self.ta.calculate_atr('AAPL')  # Symbol parameter is ignored in implementation
+        self.assertIsNotNone(atr)
+        self.assertGreater(atr, 0)
+
+        # Test with empty data
+        empty_ta = TechnicalAnalysis(pd.DataFrame())
+        atr = empty_ta.calculate_atr('AAPL')
+        self.assertIsNone(atr)
+
+        # Test with constant price data
+        constant_data = pd.DataFrame({
+            'close': [10.0] * 10,
+            'high': [10.0] * 10,
+            'low': [10.0] * 10,
+            'volume': [1000] * 10
+        })
+        constant_ta = TechnicalAnalysis(constant_data)
+        atr = constant_ta.calculate_atr('AAPL')
+        self.assertIsNotNone(atr)
+        self.assertAlmostEqual(atr, 0, delta=0.0001)
+
+    def test_calculate_price_target(self):
+        """Test price target calculation"""
+        # Test with upward trend
+        uptrend_data = pd.DataFrame({
+            'close': [10, 10.2, 10.4, 10.6, 10.8],
+            'high': [10.1, 10.3, 10.5, 10.7, 10.9],
+            'low': [9.9, 10.1, 10.3, 10.5, 10.7],
+            'volume': [1000] * 5
+        })
+        ta = TechnicalAnalysis(uptrend_data)
+        target = ta.calculate_price_target('AAPL')  # Symbol parameter is ignored in implementation
+        self.assertIsNotNone(target)
+        self.assertGreater(target, uptrend_data['close'].iloc[-1])
+
+        # Test with downward trend
+        downtrend_data = pd.DataFrame({
+            'close': [10.8, 10.6, 10.4, 10.2, 10.0],
+            'high': [10.9, 10.7, 10.5, 10.3, 10.1],
+            'low': [10.7, 10.5, 10.3, 10.1, 9.9],
+            'volume': [1000] * 5
+        })
+        ta = TechnicalAnalysis(downtrend_data)
+        target = ta.calculate_price_target('AAPL')
+        self.assertIsNotNone(target)
+        self.assertLess(target, downtrend_data['close'].iloc[-1])
+
+        # Test with sideways trend
+        sideways_data = pd.DataFrame({
+            'close': [10.0] * 5,
+            'high': [10.1] * 5,
+            'low': [9.9] * 5,
+            'volume': [1000] * 5
+        })
+        ta = TechnicalAnalysis(sideways_data)
+        target = ta.calculate_price_target('AAPL')
+        self.assertIsNotNone(target)
+        self.assertAlmostEqual(target, sideways_data['close'].iloc[-1], delta=0.1)
+
+        # Test with insufficient data
+        insufficient_data = pd.DataFrame({
+            'close': [10.0],
+            'high': [10.1],
+            'low': [9.9],
+            'volume': [1000]
+        })
+        ta = TechnicalAnalysis(insufficient_data)
+        target = ta.calculate_price_target('AAPL')
+        self.assertIsNone(target)
+
     def test_sma_calculation(self):
         """Test Simple Moving Average calculation"""
         sma = self.ta.sma(3)

@@ -7,6 +7,7 @@ import time
 import pandas as pd
 from collections import defaultdict
 from datetime import datetime
+from typing import List, Dict, Any
 
 
 # Tick Type Constants
@@ -65,6 +66,13 @@ class IBClient(EWrapper, EClient):
             'MSFT': 'NASDAQ',
             'GOOGL': 'NASDAQ'
         }
+        
+        # Portfolio and trades tracking
+        self.portfolio = {
+            'total_value': 0.0,
+            'daily_loss': 0.0
+        }
+        self.daily_trades: List[Dict[str, Any]] = []
 
     def connect_and_run(self):
         """Establish connection and start message processing thread"""
@@ -305,3 +313,19 @@ class IBClient(EWrapper, EClient):
                 print(f"Receiving delayed market data for {symbol}")
             elif marketDataType == 4:
                 print(f"Receiving delayed-frozen market data for {symbol}")
+
+    def updatePortfolio(self, total_value: float, daily_loss: float) -> None:
+        """Update portfolio information"""
+        with self._lock:
+            self.portfolio['total_value'] = total_value
+            self.portfolio['daily_loss'] = daily_loss
+
+    def getPortfolio(self) -> Dict[str, float]:
+        """Get current portfolio information"""
+        with self._lock:
+            return dict(self.portfolio)
+
+    def getDailyTrades(self) -> List[Dict[str, Any]]:
+        """Get list of trades executed today"""
+        with self._lock:
+            return list(self.daily_trades)

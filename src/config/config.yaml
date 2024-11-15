@@ -48,6 +48,9 @@ risk_management:
   stop_loss:
     atr_multiplier: 2  # multiply ATR for dynamic stop loss
     max_loss_per_trade: 0.02  # maximum loss per trade as fraction of portfolio
+  risk_reward:
+    min_ratio: 2.0  # minimum risk/reward ratio required for trade approval
+    target_ratio: 3.0  # ideal risk/reward ratio
 
 # Trading Execution Configuration
 execution:

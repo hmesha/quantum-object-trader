@@ -1,364 +1,307 @@
-from swarm import Swarm, Agent
-import json
+import logging
+from typing import Dict, Any, Optional
 import pandas as pd
 import numpy as np
-from datetime import datetime, UTC
-import re
+from datetime import datetime
+import json
+from swarm import Swarm, Agent
 
 class TradingSwarm:
-    def __init__(self, config):
-        self.client = Swarm()
+    """
+    Coordinates multiple trading agents to analyze market opportunities and execute trades
+    """
+    
+    def __init__(self, config: dict):
+        """
+        Initialize trading swarm with configuration
+        
+        Args:
+            config: Trading configuration dictionary
+        """
         self.config = config
+        self.logger = logging.getLogger(__name__)
+        self.client = Swarm()
         
-        # Initialize specialized agents
-        self.technical_agent = Agent(
-            name="Technical Analysis Agent",
-            instructions="""You are a technical analysis expert. Analyze market data using:
-            - Moving averages (SMA, EMA)
-            - Momentum indicators (RSI, MACD)
-            - Volatility indicators (Bollinger Bands)
-            - Volume analysis
-            Provide clear trading signals based on technical patterns."""
-        )
+        # Initialize agents
+        self.technical_agent = self._initialize_agent("technical")
+        self.sentiment_agent = self._initialize_agent("sentiment")
+        self.risk_agent = self._initialize_agent("risk")
+        self.execution_agent = self._initialize_agent("execution")
         
-        self.sentiment_agent = Agent(
-            name="Sentiment Analysis Agent",
-            instructions="""You are a sentiment analysis expert. Analyze market sentiment using:
-            - News articles
-            - Social media trends
-            - Market commentary
-            Provide clear sentiment signals based on qualitative data."""
-        )
+    def _initialize_agent(self, agent_type: str) -> Agent:
+        """Initialize a specific type of agent"""
+        agent_configs = {
+            'technical': Agent(
+                name="Technical Analysis Agent",
+                instructions="""You are a technical analysis expert. Analyze market data using:
+                - Moving averages (SMA, EMA)
+                - Momentum indicators (RSI, MACD)
+                - Volatility indicators (Bollinger Bands)
+                - Volume analysis
+                Provide clear trading signals based on technical patterns."""
+            ),
+            'sentiment': Agent(
+                name="Sentiment Analysis Agent",
+                instructions="""You are a sentiment analysis expert. Analyze market sentiment using:
+                - News articles
+                - Social media trends
+                - Market commentary
+                Provide clear sentiment signals based on qualitative data."""
+            ),
+            'risk': Agent(
+                name="Risk Management Agent",
+                instructions="""You are a risk management expert. Monitor and control:
+                - Position sizes
+                - Portfolio exposure
+                - Stop loss levels
+                - Risk/reward ratios
+                Ensure all trades comply with risk parameters."""
+            ),
+            'execution': Agent(
+                name="Trade Execution Agent",
+                instructions="""You are a trade execution expert. Handle:
+                - Order placement
+                - Position management
+                - Trade timing
+                Execute trades efficiently while minimizing slippage."""
+            )
+        }
         
-        self.risk_agent = Agent(
-            name="Risk Management Agent",
-            instructions="""You are a risk management expert. Monitor and control:
-            - Position sizes
-            - Portfolio exposure
-            - Stop loss levels
-            - Risk/reward ratios
-            Ensure all trades comply with risk parameters.
+        return agent_configs[agent_type]
+
+    def _calculate_rsi(self, data) -> Optional[float]:
+        """
+        Calculate RSI (Relative Strength Index)
+        
+        Args:
+            data: DataFrame or dict with price data
             
-            Format your response as a JSON object with the following structure:
-            {
-                "approved": true/false,
-                "risk_parameters": {
-                    "position_size_check": "Valid/Invalid",
-                    "portfolio_exposure_check": "Valid/Invalid", 
-                    "stop_loss_level_check": "Valid/Invalid",
-                    "risk_reward_ratio_check": "Valid/Invalid",
-                    "compliance": "Approved/Rejected"
-                },
-                "reason": "explanation if rejected"
-            }"""
-        )
-        
-        self.execution_agent = Agent(
-            name="Trade Execution Agent",
-            instructions="""You are a trade execution expert. Handle:
-            - Order placement
-            - Position management
-            - Trade timing
-            Execute trades efficiently while minimizing slippage."""
-        )
-
-    def _calculate_rsi(self, df, period=14):
-        """Calculate RSI indicator"""
+        Returns:
+            RSI value or None if calculation fails
+        """
         try:
-            # Convert to pandas DataFrame if needed
-            if isinstance(df, dict):
-                df = pd.DataFrame(df)
-            elif not isinstance(df, pd.DataFrame):
+            # Convert dict to DataFrame if needed
+            if isinstance(data, dict):
+                if not data.get('close'):
+                    return None
+                df = pd.DataFrame(data)
+            elif isinstance(data, pd.DataFrame):
+                if 'close' not in data.columns:
+                    return None
+                df = data
+            else:
                 return None
-
-            # Ensure we have close prices
-            if 'close' not in df.columns:
-                return None
-
-            # Need at least 3 data points to calculate meaningful RSI
+            
+            # Need at least 3 data points for meaningful RSI
             if len(df) < 3:
                 return None
-
+                
             # Calculate price changes
             delta = df['close'].diff()
-            delta = delta.fillna(0)
-
-            # Check if all prices are the same
-            if (df['close'] == df['close'].iloc[0]).all():
-                return 50.0
-
-            # Special case: check for all increasing/decreasing prices
-            if (delta[1:] > 0).all():
-                return 100.0
-            if (delta[1:] < 0).all():
-                return 0.0
-
-            # Adjust period if we have less data than the default period
-            actual_period = min(len(df)-1, period)
-
-            # Calculate gains and losses
-            gain = delta.where(delta > 0, 0.0)
-            loss = -delta.where(delta < 0, 0.0)
-
-            # Calculate average gain and loss
-            avg_gain = gain.rolling(window=actual_period).mean()
-            avg_loss = loss.rolling(window=actual_period).mean()
-
-            # Handle division by zero
-            avg_loss = avg_loss.replace(0, np.finfo(float).eps)
-
-            # Calculate RS and RSI
+            
+            # Handle constant prices
+            if (delta == 0).all():
+                return 50.0  # Neutral RSI for constant prices
+            
+            # Separate gains and losses
+            gains = delta.copy()
+            losses = delta.copy()
+            gains[gains < 0] = 0
+            losses[losses > 0] = 0
+            losses = abs(losses)
+            
+            # Calculate average gains and losses
+            avg_gain = gains.mean()
+            avg_loss = losses.mean()
+            
+            if avg_loss == 0:
+                if avg_gain == 0:
+                    return 50.0  # Neutral RSI when no price changes
+                return 100.0  # All gains
+            
             rs = avg_gain / avg_loss
             rsi = 100 - (100 / (1 + rs))
-
-            # Return the latest RSI value
-            latest_rsi = float(rsi.iloc[-1])
-            return latest_rsi if not np.isnan(latest_rsi) else 50.0
-
+            
+            return float(rsi)
+            
         except Exception as e:
-            print(f"Error calculating RSI: {e}")
+            self.logger.error(f"Error calculating RSI: {str(e)}")
             return None
 
-    def _fetch_news_sentiment(self, symbol):
+    def _fetch_news_sentiment(self, symbol: str) -> float:
         """Fetch and analyze news sentiment"""
-        # Implement news sentiment analysis
-        return 0.5  # Neutral sentiment
+        # Default implementation returns neutral sentiment
+        return 0.5
 
-    def _fetch_social_sentiment(self, symbol):
+    def _fetch_social_sentiment(self, symbol: str) -> float:
         """Fetch and analyze social media sentiment"""
-        # Implement social sentiment analysis
-        return 0.5  # Neutral sentiment
+        # Default implementation returns neutral sentiment
+        return 0.5
 
-    def _aggregate_sentiment(self):
-        """Aggregate different sentiment signals"""
-        # Implement sentiment aggregation
-        return 0.5  # Neutral sentiment
+    def _aggregate_sentiment(self) -> float:
+        """Aggregate different sentiment sources"""
+        # Default implementation returns neutral sentiment
+        return 0.5
 
-    def _check_daily_loss_limit(self):
-        """Check if within daily loss limits"""
-        # Implement daily loss checking
-        return True  # Placeholder
-
-    def _parse_agent_response(self, response):
-        """Parse agent response and convert to dictionary if needed"""
-        if not response or not response.messages or not response.messages[0]["content"]:
+    def _parse_agent_response(self, response) -> dict:
+        """
+        Parse agent response into a structured format
+        
+        Args:
+            response: Agent response object
+            
+        Returns:
+            Parsed response as dictionary
+        """
+        if not response or not hasattr(response, 'messages') or not response.messages:
             return {}
-        
-        content = response.messages[0]["content"]
-        
-        # If content is already a dict, return it directly
+            
+        content = response.messages[0].get('content')
+        if not content:
+            return {}
+            
+        # If content is already a dict, return it
         if isinstance(content, dict):
             return content
             
-        # If content is a string, try to parse it
-        if isinstance(content, str):
-            # First try parsing as JSON
-            try:
-                return json.loads(content)
-            except json.JSONDecodeError:
-                # If JSON parsing fails, check for markdown code block
-                if '```' in content:
-                    json_match = re.search(r'```(?:json)?\n(.*?)\n```', content, re.DOTALL)
-                    if json_match:
-                        try:
-                            return json.loads(json_match.group(1).strip())
-                        except json.JSONDecodeError:
-                            pass
-                
-                # Try to extract approved status and risk parameters from the text
-                approved_match = re.search(r'approved:\s*(true|false)', content, re.IGNORECASE)
-                if approved_match:
-                    approved_value = approved_match.group(1).lower() == 'true'
-                    
-                    # Extract risk parameter statuses from the text
-                    risk_params = {
-                        "position_size_check": "Valid",
-                        "portfolio_exposure_check": "Valid",
-                        "stop_loss_level_check": "Valid",
-                        "risk_reward_ratio_check": "Valid",
-                        "compliance": "Approved"
-                    }
-                    
-                    # Update risk parameters based on any "Invalid" or "Rejected" mentions
-                    if re.search(r'position size.*?invalid|invalid.*?position size', content, re.IGNORECASE):
-                        risk_params["position_size_check"] = "Invalid"
-                    if re.search(r'portfolio exposure.*?invalid|invalid.*?portfolio exposure', content, re.IGNORECASE):
-                        risk_params["portfolio_exposure_check"] = "Invalid"
-                    if re.search(r'stop loss.*?invalid|invalid.*?stop loss', content, re.IGNORECASE):
-                        risk_params["stop_loss_level_check"] = "Invalid"
-                    if re.search(r'risk.?reward.*?invalid|invalid.*?risk.?reward', content, re.IGNORECASE):
-                        risk_params["risk_reward_ratio_check"] = "Invalid"
-                    if re.search(r'rejected|not approved|cannot be approved', content, re.IGNORECASE):
-                        risk_params["compliance"] = "Rejected"
-                    
-                    return {
-                        "approved": approved_value,
-                        "risk_parameters": risk_params,
-                        "message": content
-                    }
-                
-                return {"status": "processed", "message": str(content)}
-                
-        return {}
+        try:
+            # Try to parse as JSON
+            return json.loads(content)
+        except json.JSONDecodeError:
+            # If not valid JSON, return as processed message
+            return {
+                "status": "processed",
+                "message": content
+            }
 
-    def _check_risk_approval(self, risk_data):
-        """Helper method to check risk approval status from nested response"""
-        if not isinstance(risk_data, dict):
+    def _check_risk_approval(self, risk_response: dict) -> bool:
+        """
+        Check if trade is approved by risk management
+        
+        Args:
+            risk_response: Risk analysis response
+            
+        Returns:
+            True if trade is approved, False otherwise
+        """
+        if not isinstance(risk_response, dict):
             return False
+            
+        # Handle nested content structure
+        if 'content' in risk_response:
+            risk_response = risk_response['content']
+            
+        # Check approval status
+        if not risk_response.get('approved', False):
+            return False
+            
+        # Validate risk parameters
+        risk_params = risk_response.get('risk_parameters', {})
+        required_checks = [
+            'position_size_check',
+            'portfolio_exposure_check',
+            'stop_loss_level_check',
+            'risk_reward_ratio_check'
+        ]
+        
+        return all(risk_params.get(check) == 'Valid' for check in required_checks)
 
-        # Check in nested content structure first
-        if "content" in risk_data and isinstance(risk_data["content"], dict):
-            return self._check_risk_approval(risk_data["content"])
+    def _check_daily_loss_limit(self) -> bool:
+        """Check if daily loss limit has been reached"""
+        # Default implementation always returns True
+        return True
 
-        # Check risk parameters if they exist
-        if "risk_parameters" in risk_data:
-            risk_params = risk_data["risk_parameters"]
-            if isinstance(risk_params, dict):
-                # Check if all parameters are "Valid" and compliance is "Approved"
-                all_valid = all(
-                    value == "Valid"
-                    for key, value in risk_params.items()
-                    if isinstance(value, str) and key.endswith("_check")
-                )
-                compliance_approved = risk_params.get("compliance") == "Approved"
-                if not all_valid or not compliance_approved:
-                    return False
-
-        # Finally check direct approved field
-        if "approved" in risk_data:
-            return bool(risk_data["approved"])
-
-        return False
-
-    def analyze_trading_opportunity(self, symbol, market_data):
+    def analyze_trading_opportunity(self, symbol: str, market_data: Any) -> Dict[str, Any]:
         """
         Analyze trading opportunity using all agents
+        
+        Args:
+            symbol: Trading symbol
+            market_data: Market data for analysis
+            
+        Returns:
+            Analysis results including execution status
         """
         try:
-            # Handle both DataFrame and dictionary inputs
-            if isinstance(market_data, pd.DataFrame):
-                market_data_dict = {
-                    "close": market_data["close"].tolist(),
-                    "high": market_data["high"].tolist() if "high" in market_data else [],
-                    "low": market_data["low"].tolist() if "low" in market_data else [],
-                    "volume": market_data["volume"].tolist() if "volume" in market_data else [],
-                    "timestamp": [str(ts) for ts in market_data.index.tolist()]
-                }
-            elif isinstance(market_data, dict):
-                market_data_dict = {
-                    "close": market_data["close"],
-                    "high": market_data.get("high", []),
-                    "low": market_data.get("low", []),
-                    "volume": market_data.get("volume", []),
-                    "timestamp": market_data.get("timestamp", [
-                        datetime.now(UTC).isoformat()
-                    ])
-                }
-            else:
-                return {"status": "error", "reason": f"Invalid market data type: {type(market_data).__name__}"}
-
             # Validate market data
-            if not market_data_dict["close"]:
-                return {"status": "error", "reason": "No price data available"}
-
+            if not isinstance(market_data, (pd.DataFrame, dict)):
+                return {
+                    "status": "error",
+                    "reason": f"Invalid market data type: {type(market_data).__name__}"
+                }
+                
+            if isinstance(market_data, dict) and not market_data.get('close'):
+                return {
+                    "status": "error",
+                    "reason": "No price data available"
+                }
+                
             # Get technical analysis
-            technical_message = {
+            technical_message = [{
                 "role": "user",
-                "content": f"Analyze technical indicators for {symbol}. Market data: {json.dumps(market_data_dict)}. Return response as JSON."
-            }
-            technical_response = self.client.run(
-                agent=self.technical_agent,
-                messages=[technical_message]
-            )
+                "content": f"Analyze technical indicators for {symbol}"
+            }]
+            technical_response = self.client.run(agent=self.technical_agent, messages=technical_message)
             technical_data = self._parse_agent_response(technical_response)
-
+            
             if "error" in technical_data:
-                return {"status": "error", "reason": f"Technical analysis error: {technical_data['error']}"}
-
+                return {
+                    "status": "error",
+                    "reason": f"Technical analysis error: {technical_data['error']}"
+                }
+                
             # Get sentiment analysis
-            sentiment_message = {
+            sentiment_message = [{
                 "role": "user",
-                "content": f"Analyze market sentiment for {symbol}. Return response as JSON."
-            }
-            sentiment_response = self.client.run(
-                agent=self.sentiment_agent,
-                messages=[sentiment_message]
-            )
+                "content": f"Analyze market sentiment for {symbol}"
+            }]
+            sentiment_response = self.client.run(agent=self.sentiment_agent, messages=sentiment_message)
             sentiment_data = self._parse_agent_response(sentiment_response)
-
+            
             # Prepare trade parameters
-            current_price = float(market_data_dict["close"][-1])
             trade_params = {
                 "symbol": symbol,
-                "size": 10,  # Example size
-                "price": current_price,
-                "timestamp": market_data_dict["timestamp"][-1],
-                "technical_signal": technical_data.get("signal"),
-                "sentiment_signal": sentiment_data.get("signal")
+                "price": market_data['close'][-1] if isinstance(market_data, dict) else market_data['close'].iloc[-1],
+                "timestamp": datetime.now().strftime("%Y-%m-%d")
             }
-
-            # Check risk limits with structured request
-            risk_message = {
+            
+            # Get risk analysis
+            risk_message = [{
                 "role": "user",
-                "content": json.dumps({
-                    "command": "check_risk",
+                "content": {
+                    "symbol": symbol,
                     "trade": trade_params,
-                    "risk_parameters": {
-                        "position_size_check": "required",
-                        "portfolio_exposure_check": "required",
-                        "stop_loss_level_check": "required",
-                        "risk_reward_ratio_check": "required"
-                    }
-                })
-            }
-            risk_response = self.client.run(
-                agent=self.risk_agent,
-                messages=[risk_message]
-            )
+                    "technical": technical_data,
+                    "sentiment": sentiment_data
+                }
+            }]
+            risk_response = self.client.run(agent=self.risk_agent, messages=risk_message)
             risk_data = self._parse_agent_response(risk_response)
-
-            # Debug print
-            print(f"Risk data received: {risk_data}")
-
-            # Check for risk approval using the helper method
-            is_approved = self._check_risk_approval(risk_data)
-            print(f"Risk approval status: {is_approved}")
-
-            # If risk is not approved, return rejection with reason
-            if not is_approved:
-                reason = (
-                    risk_data.get("reason") or
-                    (risk_data.get("risk_parameters", {}).get("reason") if isinstance(risk_data.get("risk_parameters"), dict) else None) or
-                    "Risk limits exceeded"
-                )
+            
+            # Check risk approval
+            if not self._check_risk_approval(risk_data):
                 return {
                     "status": "rejected",
-                    "reason": reason,
-                    "price": current_price,
-                    "timestamp": trade_params["timestamp"]
+                    "reason": risk_data.get('reason', 'Risk checks failed'),
+                    "risk_parameters": risk_data.get('risk_parameters', {})
                 }
-
-            # Execute trade if risk is approved
-            execution_message = {
+                
+            # Execute trade if approved
+            execution_message = [{
                 "role": "user",
-                "content": json.dumps({
-                    "command": "execute_trade",
+                "content": {
+                    "action": "execute",
                     "trade": trade_params
-                })
-            }
-            execution_response = self.client.run(
-                agent=self.execution_agent,
-                messages=[execution_message]
-            )
+                }
+            }]
+            execution_response = self.client.run(agent=self.execution_agent, messages=execution_message)
             execution_data = self._parse_agent_response(execution_response)
-
-            # Return successful execution result
-            return {
-                "status": "executed",
-                "price": current_price,
-                "size": trade_params["size"],
-                "timestamp": trade_params["timestamp"]
-            }
-
+            
+            return execution_data
+            
         except Exception as e:
-            return {"status": "error", "reason": str(e)}
+            self.logger.exception(f"Error analyzing trading opportunity: {str(e)}")
+            return {
+                "status": "error",
+                "reason": str(e)
+            }
