@@ -32,9 +32,19 @@ This tutorial will guide you through setting up your Quantum Trader development 
    ```
 
 ### 3. TWS/Gateway Configuration
-1. Download and install TWS or IB Gateway from Interactive Brokers
-2. Configure API settings:
-   - Enable API connections
-   - Set port to 7496 for TWS or 4001 for Gateway
-   - Add localhost to trusted IPs
-3. Test connection using the provided test script
+- Download and install TWS or IB Gateway from Interactive Brokers
+- Configure API settings:
+  - Enable API connections
+  - Set port to 7496 for TWS or 4001 for Gateway
+  - Add localhost to trusted IPs
+- Test connection using the provided test script
+
+### 4. Verification
+To verify your setup is complete:
+1. Run the test suite:
+   ```
+   python -m pytest tests/
+   ```
+2. Check system status:
+   ```
+   python tools/check_setup.py

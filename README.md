@@ -42,7 +42,13 @@ A comprehensive training program is included to help you understand and effectiv
 
 ### Running the Training Program
 
-1. Start the training server:
+1. Start the development server (with no-cache for instant content updates):
+```bash
+cd training
+python3 server.py
+```
+
+Alternatively, you can use the basic Python server (note: content changes may be cached):
 ```bash
 cd training
 python3 -m http.server 8000
