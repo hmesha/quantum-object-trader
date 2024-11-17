@@ -42,19 +42,15 @@ A comprehensive training program is included to help you understand and effectiv
 
 ### Running the Training Program
 
-1. Start the development server (with no-cache for instant content updates):
+1. Start the training server:
 ```bash
 cd training
-python3 server.py
+python3 server.py  # Runs on default port 7555
+# Or specify a custom port:
+python3 server.py --port 8000
 ```
 
-Alternatively, you can use the basic Python server (note: content changes may be cached):
-```bash
-cd training
-python3 -m http.server 8000
-```
-
-2. Open your web browser and visit: `http://localhost:8000`
+2. Open your web browser and visit: `http://localhost:7555` (or your custom port if specified)
 
 ### Training Structure
 

@@ -1,5 +1,6 @@
 import os
 import socket
+import argparse
 from http.server import HTTPServer, SimpleHTTPRequestHandler
 
 class Handler(SimpleHTTPRequestHandler):
@@ -48,4 +49,8 @@ def run_server(port):
         server.server_close()
 
 if __name__ == '__main__':
-    run_server(7555)
+    parser = argparse.ArgumentParser(description='Run the Quantum Trader training server')
+    parser.add_argument('--port', type=int, default=7555,
+                      help='Port to run the server on (default: 7555)')
+    args = parser.parse_args()
+    run_server(args.port)

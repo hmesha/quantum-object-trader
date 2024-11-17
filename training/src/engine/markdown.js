@@ -46,6 +46,8 @@ export function parseMarkdown(markdown) {
     converter.setOption('excludeTrailingPunctuationFromURLs', true);
     converter.setOption('literalMidWordUnderscores', true);
     converter.setOption('tables', true);
+    converter.setOption('simpleLineBreaks', true);
+    converter.setOption('smartIndentationFix', false);
 
     // Convert markdown to HTML
     let html = converter.makeHtml(markdown);
