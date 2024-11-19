@@ -26,10 +26,11 @@ def __init__(self, config):
 ```
 
 Required configuration:
+
 ```yaml
 api:
-  tws_endpoint: "127.0.0.1"  # TWS/Gateway host
-  port: 7497                 # TWS/Gateway port
+    tws_endpoint: "127.0.0.1"  # TWS/Gateway host
+    port: 7497                 # TWS/Gateway port
 ```
 
 ## Connection Management
@@ -47,6 +48,7 @@ def connect_and_run(self):
 ```
 
 The connection process:
+
 1. Establishes connection to TWS/Gateway
 2. Starts message processing thread
 3. Waits for initial connection messages
@@ -60,6 +62,7 @@ def error(self, reqId, errorCode, errorString, advancedOrderRejectJson=""):
 ```
 
 Handles various error types:
+
 - Connection status messages (2104, 2106, 2158)
 - Security definition errors (200)
 - Market data subscription errors (354)
@@ -70,6 +73,7 @@ Handles various error types:
 ### Data Structure
 
 The market data is stored in a synchronized structure:
+
 ```python
 self.market_data = defaultdict(lambda: {
     'timestamp': [],    # Data timestamps
@@ -99,6 +103,7 @@ def get_market_data(self, symbol):
 ```
 
 The process:
+
 1. Creates contract specification
 2. Generates unique request ID
 3. Requests delayed market data
@@ -108,6 +113,7 @@ The process:
 ### Data Synchronization
 
 The system ensures data synchronization through:
+
 1. Centralized update method
 2. Atomic operations with threading locks
 3. Consistent timestamp alignment
@@ -133,6 +139,7 @@ def tickPrice(self, reqId, tickType, price, attrib):
 ```
 
 Handles various tick types:
+
 - Last/close prices (4, 68, 9)
 - High prices (6, 70)
 - Low prices (7, 71)
@@ -146,12 +153,14 @@ def tickSize(self, reqId, tickType, size):
 ```
 
 Processes volume data:
+
 - Trade volume (8, 72)
 - Updates synchronized with price data
 
 ## Data Validation
 
 The system implements several validation layers:
+
 1. Price validation (must be > 0)
 2. Data synchronization checks
 3. Timeout handling
@@ -160,12 +169,14 @@ The system implements several validation layers:
 ## Best Practices
 
 ### Market Data Handling
+
 1. Always use the synchronized update method
 2. Check for valid prices before processing
 3. Handle timeout conditions
 4. Implement proper error recovery
 
 ### Connection Management
+
 1. Monitor connection status
 2. Handle reconnection scenarios
 3. Validate market data subscriptions
@@ -174,6 +185,7 @@ The system implements several validation layers:
 ## Error Recovery
 
 The system implements various error recovery mechanisms:
+
 1. Connection retry logic
 2. Data resubscription
 3. State recovery
@@ -183,13 +195,13 @@ The system implements various error recovery mechanisms:
 
 ```yaml
 api:
-  tws_endpoint: "127.0.0.1"
-  port: 7497
+    tws_endpoint: "127.0.0.1"
+    port: 7497
 
 market_data:
-  timeout: 15
-  retry_attempts: 3
-  data_type: "delayed"  # or "realtime"
+    timeout: 15
+    retry_attempts: 3
+    data_type: "delayed"  # or "realtime"
 ```
 
 ## Usage Example
@@ -219,23 +231,24 @@ if client.connect_and_run():
 Common issues and solutions:
 
 1. Connection Issues
-   - Verify TWS/Gateway is running
-   - Check port configuration
-   - Confirm API permissions
+    - Verify TWS/Gateway is running
+    - Check port configuration
+    - Confirm API permissions
 
 2. Market Data Issues
-   - Verify market data subscriptions
-   - Check symbol validity
-   - Confirm data type settings
+    - Verify market data subscriptions
+    - Check symbol validity
+    - Confirm data type settings
 
 3. Synchronization Issues
-   - Check thread safety
-   - Verify data structure integrity
-   - Monitor update sequences
+    - Check thread safety
+    - Verify data structure integrity
+    - Monitor update sequences
 
 ## Logging
 
 The system provides detailed logging:
+
 - Connection events
 - Market data updates
 - Error conditions
@@ -244,6 +257,7 @@ The system provides detailed logging:
 ## Integration Notes
 
 The IB Connector integrates with:
+
 1. Trading system core
 2. Market data processing
 3. Order management

@@ -1,8 +1,11 @@
 # Risk Management Integration
 
+## Overview
+
 This tutorial guides you through implementing comprehensive risk management controls in Quantum Trader, from individual position stop losses to portfolio-wide risk monitoring and automated alerts.
 
 ## Prerequisites
+
 - Completed Portfolio Management tutorial
 - Understanding of position sizing
 - Familiarity with trading system configuration
@@ -13,17 +16,18 @@ The system uses technical analysis to determine appropriate stop loss and target
 
 ```yaml
 risk_management:
-  stop_loss:
-    atr_multiplier: 2  # ATR-based stop loss multiplier
-    max_loss_per_trade: 0.02  # Maximum 2% loss per trade
-  position_limits:
-    max_position_size: 100
-    max_portfolio_exposure: 0.25  # 25% maximum exposure
+    stop_loss:
+        atr_multiplier: 2  # ATR-based stop loss multiplier
+        max_loss_per_trade: 0.02  # Maximum 2% loss per trade
+    position_limits:
+        max_position_size: 100
+        max_portfolio_exposure: 0.25  # 25% maximum exposure
 ```
 
 ### ATR-Based Stop Losses
 
 1. Calculate ATR-based stop loss:
+
 ```python
 def calculate_stop_loss(symbol, current_price):
     """
@@ -42,6 +46,7 @@ def calculate_stop_loss(symbol, current_price):
 ```
 
 2. Price Target Calculation:
+
 ```python
 def calculate_price_target(symbol, current_price):
     """
@@ -75,15 +80,16 @@ Position sizing based on risk parameters:
 
 ```yaml
 execution:
-  position_sizing:
-    method: "risk_based"  # risk_based or fixed_size
-    risk_per_trade: 0.01  # 1% risk per trade
-    default_size: 10  # default position size if fixed
+    position_sizing:
+        method: "risk_based"  # risk_based or fixed_size
+        risk_per_trade: 0.01  # 1% risk per trade
+        default_size: 10  # default position size if fixed
 ```
 
 ### Implementation Steps
 
 1. Calculate position size:
+
 ```python
 def calculate_position_size(symbol, entry_price):
     """
@@ -115,6 +121,7 @@ def calculate_position_size(symbol, entry_price):
 ```
 
 2. Validate portfolio exposure:
+
 ```python
 def check_portfolio_exposure(new_position_value):
     """
@@ -204,19 +211,22 @@ def validate_trade(symbol, size, price):
 
 ## Best Practices
 
-1. Risk Management
+### 1. Risk Management
+
 - Always use ATR-based stop losses
 - Maintain minimum 2:1 reward-to-risk ratio
 - Scale position sizes with account equity
 - Monitor total portfolio exposure
 
-2. Position Sizing
+### 2. Position Sizing
+
 - Use risk-based position sizing
 - Consider volatility (ATR) in calculations
 - Respect maximum position limits
 - Account for portfolio exposure
 
-3. Trade Validation
+### 3. Trade Validation
+
 - Check all risk parameters before trading
 - Document validation results
 - Monitor risk metrics in real-time
@@ -224,19 +234,22 @@ def validate_trade(symbol, size, price):
 
 ## Troubleshooting
 
-1. Stop Loss Issues
+### 1. Stop Loss Issues
+
 - Verify ATR calculation
 - Check price data quality
 - Monitor volatility changes
 - Review stop loss distances
 
-2. Position Sizing Problems
+### 2. Position Sizing Problems
+
 - Validate risk calculations
 - Check portfolio value
 - Verify exposure calculations
 - Review size limits
 
-3. Risk Validation Failures
+### 3. Risk Validation Failures
+
 - Check validation parameters
 - Review rejection reasons
 - Monitor market conditions

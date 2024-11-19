@@ -9,6 +9,7 @@ The dashboard provides a real-time, color-coded CLI interface for monitoring tra
 ### 1. Market Data Panel
 
 Displays real-time market information:
+
 - Current price
 - Bid/Ask spread
 - Volume
@@ -16,6 +17,7 @@ Displays real-time market information:
 - 52-week high/low
 
 Color coding:
+
 - Green: Positive change
 - Red: Negative change
 - Yellow: No change
@@ -24,13 +26,15 @@ Color coding:
 ### 2. Position Panel
 
 Shows current positions:
-```
+
+```text
 Symbol  Qty   Avg Cost  Curr Price  P&L      P&L%
 AAPL    100   150.00   155.00      +500.00  +3.33%
 GOOGL   50    2800.00  2795.00     -250.00  -0.18%
 ```
 
 Color coding:
+
 - Green: Profitable position
 - Red: Loss-making position
 - White: Neutral position
@@ -38,13 +42,15 @@ Color coding:
 ### 3. Order Panel
 
 Displays active and recent orders:
-```
+
+```text
 ID     Symbol  Type    Qty   Price   Status
 12345  AAPL    MARKET  100   155.00  FILLED
 12346  GOOGL   LIMIT   50    2800.00 PENDING
 ```
 
 Status colors:
+
 - Green: Filled
 - Yellow: Pending
 - Red: Rejected
@@ -53,12 +59,14 @@ Status colors:
 ### 4. Technical Indicators
 
 Shows real-time technical analysis:
+
 - RSI
 - MACD
 - Bollinger Bands
 - Moving Averages
 
 Indicator alerts:
+
 - Green: Buy signal
 - Red: Sell signal
 - Yellow: Neutral
@@ -66,11 +74,13 @@ Indicator alerts:
 ### 5. Sentiment Analysis
 
 Displays current market sentiment:
+
 - News sentiment score
 - Social media sentiment
 - Combined sentiment indicator
 
 Sentiment colors:
+
 - Dark Green: Very positive
 - Light Green: Positive
 - Yellow: Neutral
@@ -80,12 +90,14 @@ Sentiment colors:
 ### 6. System Status
 
 Shows system health information:
+
 - Connection status
 - API rate limits
 - Error counts
 - System resources
 
 Status colors:
+
 - Green: Normal
 - Yellow: Warning
 - Red: Critical
@@ -93,7 +105,8 @@ Status colors:
 ## Layout Management
 
 ### Default Layout
-```
+
+```text
 +----------------+----------------+
 |  Market Data   |   Positions   |
 +----------------+----------------+
@@ -104,6 +117,7 @@ Status colors:
 ```
 
 ### Alternative Layouts
+
 - Compact mode
 - Full screen mode
 - Focus mode (single panel)
@@ -112,11 +126,13 @@ Status colors:
 ## Keyboard Controls
 
 ### Navigation
+
 - Arrow keys: Move between panels
 - Tab: Cycle through panels
 - Enter: Select/Expand panel
 
 ### Commands
+
 - 'q': Quit
 - 'r': Refresh
 - 'h': Help
@@ -125,6 +141,7 @@ Status colors:
 - 's': Save layout
 
 ### Panel-specific
+
 - 'o': Sort orders
 - 'p': Sort positions
 - 'i': Change indicator timeframe
@@ -133,48 +150,53 @@ Status colors:
 ## Configuration
 
 ### Color Scheme
+
 ```yaml
 dashboard:
-  colors:
-    positive: "green"
-    negative: "red"
-    neutral: "white"
-    warning: "yellow"
-    info: "blue"
-    background: "black"
+    colors:
+        positive: "green"
+        negative: "red"
+        neutral: "white"
+        warning: "yellow"
+        info: "blue"
+        background: "black"
 ```
 
 ### Layout Settings
+
 ```yaml
 dashboard:
-  layout:
-    default_view: "standard"
-    refresh_rate: 1
-    timestamp_format: "%H:%M:%S"
-    show_grid: true
+    layout:
+        default_view: "standard"
+        refresh_rate: 1
+        timestamp_format: "%H:%M:%S"
+        show_grid: true
 ```
 
 ### Alert Configuration
+
 ```yaml
 dashboard:
-  alerts:
-    audio_enabled: true
-    visual_enabled: true
-    priority_levels:
-      - critical
-      - warning
-      - info
+    alerts:
+        audio_enabled: true
+        visual_enabled: true
+        priority_levels:
+            - critical
+            - warning
+            - info
 ```
 
 ## Performance
 
 ### Optimization
+
 - Efficient screen updates
 - Buffered output
 - Async data updates
 - Resource monitoring
 
 ### Rate Limiting
+
 - Configurable refresh rates
 - Smart update scheduling
 - Bandwidth optimization
@@ -182,6 +204,7 @@ dashboard:
 ## Integration
 
 The dashboard integrates with:
+
 1. Market data feed
 2. Order management system
 3. Technical analysis module
@@ -218,16 +241,19 @@ dashboard.stop()
 ## Error Handling
 
 ### Display Errors
+
 - Screen size constraints
 - Terminal compatibility
 - Color support issues
 
 ### Data Errors
+
 - Missing data handling
 - Update failures
 - Connection issues
 
 ### Recovery
+
 - Auto-refresh on error
 - Fallback layouts
 - Error notifications

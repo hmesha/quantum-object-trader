@@ -1,8 +1,11 @@
 # Sentiment Analysis Setup
 
+## Overview
+
 In this tutorial, you'll learn how to set up and configure the sentiment analysis component of Quantum Trader. This powerful feature analyzes market sentiment from news and social media sources to enhance your trading decisions.
 
 ## Prerequisites
+
 - Completed Technical Analysis Integration tutorial
 - Basic understanding of YAML configuration
 - API keys for news services (if using external providers)
@@ -16,18 +19,20 @@ The news analysis component processes market news to generate sentiment signals.
 
 ```yaml
 sentiment_analysis:
-  news:
-    update_interval: 300  # 5 minutes
-    lookback_period: 86400  # 24 hours
-    min_articles: 5
+    news:
+        update_interval: 300  # 5 minutes
+        lookback_period: 86400  # 24 hours
+        min_articles: 5
 ```
 
 Key parameters:
+
 - `update_interval`: How often to fetch new articles (in seconds)
 - `lookback_period`: How far back to analyze news (in seconds)
 - `min_articles`: Minimum number of articles needed for reliable sentiment
 
 ### Validation Steps
+
 1. Start Quantum Trader in debug mode
 2. Check the logs for successful news data fetching
 3. Verify that sentiment scores are being generated
@@ -40,19 +45,22 @@ Social media sentiment can provide early signals of market movements. Here's how
 
 ```yaml
 sentiment_analysis:
-  social:
-    update_interval: 180  # 3 minutes
-    platforms: ["twitter", "reddit"]
-    min_mentions: 10
+    social:
+        update_interval: 180  # 3 minutes
+        platforms: ["twitter", "reddit"]
+        min_mentions: 10
 ```
 
 Key parameters:
+
 - `platforms`: List of social media platforms to monitor
 - `min_mentions`: Minimum mentions needed for sentiment calculation
 - `update_interval`: How often to refresh social media data
 
 ### Platform-Specific Setup
+
 For each platform:
+
 1. Configure API access (if using external services)
 2. Set rate limits appropriately
 3. Define relevant hashtags or keywords to track
@@ -62,14 +70,16 @@ For each platform:
 To ensure your sentiment analysis is working correctly:
 
 1. Configure the sentiment weights:
+
 ```yaml
 sentiment_analysis:
-  weights:
-    news: 0.6
-    social: 0.4
+    weights:
+        news: 0.6
+        social: 0.4
 ```
 
 2. Run the built-in accuracy test:
+
 ```python
 from src.trading.trading_agents import TradingSwarm
 
@@ -89,50 +99,54 @@ sentiment_response = trading_swarm.client.run(
 ```
 
 3. Monitor these key metrics:
-- Signal accuracy
-- Response time
-- Error rates
-- Data availability
+    - Signal accuracy
+    - Response time
+    - Error rates
+    - Data availability
 
 ### Troubleshooting Common Issues
 
 If you encounter issues:
 
 1. Data Access Problems
-   - Check API connectivity
-   - Verify credentials
-   - Monitor rate limits
+    - Check API connectivity
+    - Verify credentials
+    - Monitor rate limits
 
 2. Analysis Issues
-   - Validate input data
-   - Check scoring logic
-   - Verify weight configurations
+    - Validate input data
+    - Check scoring logic
+    - Verify weight configurations
 
 3. Integration Problems
-   - Check signal format
-   - Verify timing
-   - Monitor system logs
+    - Check signal format
+    - Verify timing
+    - Monitor system logs
 
 ## Best Practices
 
-1. Data Collection
-   - Use multiple data sources for better accuracy
-   - Validate data quality regularly
-   - Monitor source reliability
+### 1. Data Collection
 
-2. Analysis Configuration
-   - Start with default weights
-   - Adjust based on performance
-   - Keep lookback periods reasonable
+- Use multiple data sources for better accuracy
+- Validate data quality regularly
+- Monitor source reliability
 
-3. System Integration
-   - Monitor system logs
-   - Track sentiment accuracy
-   - Regularly backup configurations
+### 2. Analysis Configuration
+
+- Start with default weights
+- Adjust based on performance
+- Keep lookback periods reasonable
+
+### 3. System Integration
+
+- Monitor system logs
+- Track sentiment accuracy
+- Regularly backup configurations
 
 ## Next Steps
 
 After completing this setup:
+
 1. Monitor sentiment signals for your watchlist
 2. Compare sentiment signals with price action
 3. Adjust weights based on performance

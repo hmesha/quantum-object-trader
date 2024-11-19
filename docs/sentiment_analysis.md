@@ -35,18 +35,20 @@ def _fetch_news_sentiment(self, symbol):
 ```
 
 Features:
+
 - Default neutral sentiment (0.5)
 - Extensible for real news API integration
 - Configurable update intervals
 - Historical sentiment tracking
 
 Configuration:
+
 ```yaml
 sentiment_analysis:
-  news:
-    update_interval: 300  # seconds
-    lookback_period: 86400  # 24 hours
-    min_articles: 5
+    news:
+        update_interval: 300  # seconds
+        lookback_period: 86400  # 24 hours
+        min_articles: 5
 ```
 
 ### 2. Social Media Analysis
@@ -65,18 +67,20 @@ def _fetch_social_sentiment(self, symbol):
 ```
 
 Features:
+
 - Default neutral sentiment (0.5)
 - Extensible for social media API integration
 - Configurable platforms
 - Mention tracking
 
 Configuration:
+
 ```yaml
 sentiment_analysis:
-  social:
-    update_interval: 180
-    platforms: ["twitter", "reddit"]
-    min_mentions: 10
+    social:
+        update_interval: 180
+        platforms: ["twitter", "reddit"]
+        min_mentions: 10
 ```
 
 ### 3. Sentiment Aggregation
@@ -92,17 +96,19 @@ def _aggregate_sentiment(self):
 ```
 
 Features:
+
 - Weighted sentiment combination
 - Configurable source weights
 - Time decay weighting
 - Outlier filtering
 
 Configuration:
+
 ```yaml
 sentiment_analysis:
-  weights:
-    news: 0.6
-    social: 0.4
+    weights:
+        news: 0.6
+        social: 0.4
 ```
 
 ## Integration with Trading System
@@ -124,6 +130,7 @@ def analyze_sentiment(symbol):
 ```
 
 The sentiment signal is:
+
 - Integrated with technical analysis
 - Used in trading decisions
 - Weighted based on confidence
@@ -132,6 +139,7 @@ The sentiment signal is:
 ### 2. Risk Management
 
 Sentiment data influences:
+
 - Position sizing
 - Entry/exit timing
 - Risk assessment
@@ -140,6 +148,7 @@ Sentiment data influences:
 ### 3. Performance Monitoring
 
 Tracks:
+
 - Sentiment accuracy
 - Signal timeliness
 - Prediction success
@@ -151,44 +160,47 @@ Tracks:
 
 ```yaml
 sentiment_analysis:
-  news:
-    update_interval: 300
-    lookback_period: 86400
-    min_articles: 5
-  social:
-    update_interval: 180
-    platforms: ["twitter", "reddit"]
-    min_mentions: 10
-  weights:
-    news: 0.6
-    social: 0.4
+    news:
+        update_interval: 300
+        lookback_period: 86400
+        min_articles: 5
+    social:
+        update_interval: 180
+        platforms: ["twitter", "reddit"]
+        min_mentions: 10
+    weights:
+        news: 0.6
+        social: 0.4
 ```
 
 ### Agent Configuration
 
 ```yaml
 agent_system:
-  confidence_thresholds:
-    sentiment: 0.6
-  signal_weights:
-    sentiment: 0.3
+    confidence_thresholds:
+        sentiment: 0.6
+    signal_weights:
+        sentiment: 0.3
 ```
 
 ## Error Handling
 
 ### Data Errors
+
 - Missing data handling
 - Invalid data detection
 - Source unavailability
 - Rate limiting
 
 ### Processing Errors
+
 - Analysis failures
 - Aggregation issues
 - Signal generation problems
 - Integration errors
 
 ### Recovery Strategies
+
 - Default to neutral
 - Use cached data
 - Adjust weights
@@ -197,18 +209,21 @@ agent_system:
 ## Best Practices
 
 ### 1. Data Collection
+
 - Regular updates
 - Multiple sources
 - Data validation
 - Source reliability
 
 ### 2. Analysis
+
 - Consistent scoring
 - Outlier handling
 - Trend recognition
 - Context consideration
 
 ### 3. Integration
+
 - Signal normalization
 - Weight optimization
 - Performance tracking
@@ -240,18 +255,21 @@ sentiment_data = trading_swarm._parse_agent_response(sentiment_response)
 ## Monitoring
 
 ### Performance Metrics
+
 - Signal accuracy
 - Prediction success
 - Response time
 - Error rates
 
 ### System Health
+
 - Data availability
 - Processing status
 - Integration status
 - Error tracking
 
 ### Logging
+
 - Sentiment updates
 - Signal generation
 - Error conditions
@@ -262,41 +280,41 @@ sentiment_data = trading_swarm._parse_agent_response(sentiment_response)
 Common issues and solutions:
 
 1. Data Access
-   - Check API connectivity
-   - Verify credentials
-   - Monitor rate limits
-   - Check data freshness
+    - Check API connectivity
+    - Verify credentials
+    - Monitor rate limits
+    - Check data freshness
 
 2. Analysis Issues
-   - Validate input data
-   - Check scoring logic
-   - Monitor aggregation
-   - Verify weights
+    - Validate input data
+    - Check scoring logic
+    - Monitor aggregation
+    - Verify weights
 
 3. Integration Problems
-   - Check signal format
-   - Verify timing
-   - Monitor performance
-   - Track errors
+    - Check signal format
+    - Verify timing
+    - Monitor performance
+    - Track errors
 
 ## Future Enhancements
 
 Potential improvements:
 
 1. Data Sources
-   - Additional news sources
-   - More social platforms
-   - Alternative data
-   - Real-time feeds
+    - Additional news sources
+    - More social platforms
+    - Alternative data
+    - Real-time feeds
 
 2. Analysis Methods
-   - Machine learning models
-   - Natural language processing
-   - Pattern recognition
-   - Trend analysis
+    - Machine learning models
+    - Natural language processing
+    - Pattern recognition
+    - Trend analysis
 
 3. Integration Features
-   - Custom signals
-   - Advanced weighting
-   - Automated optimization
-   - Performance analytics
+    - Custom signals
+    - Advanced weighting
+    - Automated optimization
+    - Performance analytics

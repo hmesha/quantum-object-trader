@@ -21,6 +21,7 @@ technical_agent = Agent(
 ```
 
 Responsibilities:
+
 - Analyzes price patterns
 - Calculates technical indicators
 - Generates technical trading signals
@@ -40,6 +41,7 @@ sentiment_agent = Agent(
 ```
 
 Responsibilities:
+
 - Analyzes news sentiment
 - Processes social media data
 - Evaluates market sentiment
@@ -60,6 +62,7 @@ risk_agent = Agent(
 ```
 
 Responsibilities:
+
 - Validates trade parameters
 - Enforces position limits
 - Monitors risk exposure
@@ -79,6 +82,7 @@ execution_agent = Agent(
 ```
 
 Responsibilities:
+
 - Places orders
 - Manages positions
 - Optimizes execution
@@ -103,6 +107,7 @@ def analyze_trading_opportunity(self, symbol, market_data):
 ```
 
 Process:
+
 1. Validates market data
 2. Converts data to required format
 3. Distributes to relevant agents
@@ -121,6 +126,7 @@ def analyze_technical(market_data_dict):
 ```
 
 Components:
+
 - Price analysis
 - Indicator calculations
 - Pattern recognition
@@ -139,6 +145,7 @@ def analyze_sentiment(symbol):
 ```
 
 Components:
+
 - News sentiment
 - Social sentiment
 - Market sentiment
@@ -157,6 +164,7 @@ def check_risk_limits(trade_params):
 ```
 
 Checks:
+
 - Position size limits
 - Daily loss limits
 - Portfolio exposure
@@ -175,6 +183,7 @@ def execute_trade(trade_params):
 ```
 
 Process:
+
 - Order creation
 - Execution timing
 - Position tracking
@@ -186,44 +195,47 @@ Process:
 
 ```yaml
 risk_management:
-  position_limits:
-    max_position_size: 100
-    max_portfolio_exposure: 0.25
-  loss_limits:
-    daily_loss_limit: 1000
-    max_drawdown: 0.15
-  trade_frequency:
-    min_time_between_trades: 300
-    max_daily_trades: 10
+    position_limits:
+        max_position_size: 100
+        max_portfolio_exposure: 0.25
+    loss_limits:
+        daily_loss_limit: 1000
+        max_drawdown: 0.15
+    trade_frequency:
+        min_time_between_trades: 300
+        max_daily_trades: 10
 ```
 
 ### Agent System Configuration
 
 ```yaml
 agent_system:
-  update_interval: 60
-  confidence_thresholds:
-    technical: 0.7
-    sentiment: 0.6
-    combined: 0.65
-  signal_weights:
-    technical: 0.7
-    sentiment: 0.3
+    update_interval: 60
+    confidence_thresholds:
+        technical: 0.7
+        sentiment: 0.6
+        combined: 0.65
+    signal_weights:
+        technical: 0.7
+        sentiment: 0.3
 ```
 
 ## Error Handling
 
 ### Market Data Errors
+
 - Missing data handling
 - Invalid data detection
 - Synchronization issues
 
 ### Trading Errors
+
 - Order rejection handling
 - Position limit violations
 - Risk limit breaches
 
 ### System Errors
+
 - Connection issues
 - Agent failures
 - State management
@@ -231,12 +243,14 @@ agent_system:
 ## Performance Monitoring
 
 ### Trade Tracking
+
 - Entry/exit prices
 - Position sizes
 - P&L tracking
 - Risk metrics
 
 ### System Metrics
+
 - Agent performance
 - Decision accuracy
 - Risk compliance
@@ -245,6 +259,7 @@ agent_system:
 ## Integration
 
 The trading logic integrates with:
+
 1. IB Connector for market data and execution
 2. Configuration management
 3. Logging system
@@ -274,41 +289,45 @@ elif result['status'] == 'rejected':
 
 ## Best Practices
 
-1. Data Handling
-   - Validate all input data
-   - Ensure data synchronization
-   - Handle missing data appropriately
+### 1. Data Handling
 
-2. Risk Management
-   - Always check risk limits
-   - Monitor position sizes
-   - Track exposure levels
+- Validate all input data
+- Ensure data synchronization
+- Handle missing data appropriately
 
-3. Agent Communication
-   - Clear message formats
-   - Proper error handling
-   - State management
+### 2. Risk Management
 
-4. System Monitoring
-   - Log all decisions
-   - Track performance metrics
-   - Monitor system health
+- Always check risk limits
+- Monitor position sizes
+- Track exposure levels
+
+### 3. Agent Communication
+
+- Clear message formats
+- Proper error handling
+- State management
+
+### 4. System Monitoring
+
+- Log all decisions
+- Track performance metrics
+- Monitor system health
 
 ## Troubleshooting
 
 Common issues and solutions:
 
 1. Signal Generation
-   - Verify data quality
-   - Check indicator calculations
-   - Validate signal thresholds
+    - Verify data quality
+    - Check indicator calculations
+    - Validate signal thresholds
 
 2. Risk Management
-   - Check limit configurations
-   - Verify position calculations
-   - Monitor risk metrics
+    - Check limit configurations
+    - Verify position calculations
+    - Monitor risk metrics
 
 3. Trade Execution
-   - Verify order parameters
-   - Check execution status
-   - Monitor fill prices
+    - Verify order parameters
+    - Check execution status
+    - Monitor fill prices

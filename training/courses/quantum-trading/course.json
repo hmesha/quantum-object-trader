@@ -15,6 +15,17 @@
             ],
             "topics": [
                 {
+                    "id": "introduction",
+                    "title": "Introduction to Quantum Trader",
+                    "type": "tutorial",
+                    "content": "introduction.md",
+                    "checkpoints": [
+                        "Understanding Quantum Trader's purpose",
+                        "Review of key features",
+                        "Training program overview"
+                    ]
+                },
+                {
                     "id": "system-setup",
                     "title": "System Setup",
                     "type": "tutorial",

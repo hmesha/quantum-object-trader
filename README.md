@@ -11,30 +11,30 @@ Quantum Trader is a sophisticated algorithmic trading system that leverages Inte
 ### Multi-Agent Architecture
 
 1. **Technical Analysis Agent**
-   - Analyzes market data using multiple indicators:
-     - SMA (20, 50, 200 periods)
-     - EMA (12, 26 periods)
-     - RSI
-     - MACD
-     - Bollinger Bands
-   - Identifies trading patterns and signals
+    - Analyzes market data using multiple indicators:
+        - SMA (20, 50, 200 periods)
+        - EMA (12, 26 periods)
+        - RSI
+        - MACD
+        - Bollinger Bands
+    - Identifies trading patterns and signals
 
 2. **Sentiment Analysis Agent**
-   - Analyzes market sentiment from news and social media
-   - Monitors multiple platforms (Twitter, Reddit)
-   - Provides weighted sentiment signals
+    - Analyzes market sentiment from news and social media
+    - Monitors multiple platforms (Twitter, Reddit)
+    - Provides weighted sentiment signals
 
 3. **Risk Management System**
-   - Position size and portfolio exposure limits
-   - Daily loss limits and drawdown protection
-   - Trade frequency controls
-   - Dynamic stop-loss using ATR
+    - Position size and portfolio exposure limits
+    - Daily loss limits and drawdown protection
+    - Trade frequency controls
+    - Dynamic stop-loss using ATR
 
 4. **Trade Execution System**
-   - Supports market and limit orders
-   - Slippage tolerance controls
-   - Position sizing based on risk or fixed size
-   - Order timeout management
+    - Supports market and limit orders
+    - Slippage tolerance controls
+    - Position sizing based on risk or fixed size
+    - Order timeout management
 
 ## Training Program
 
@@ -43,6 +43,7 @@ A comprehensive training program is included to help you understand and effectiv
 ### Running the Training Program
 
 1. Start the training server:
+
 ```bash
 cd training
 python3 server.py  # Runs on default port 7555
@@ -55,20 +56,20 @@ python3 server.py --port 8000
 ### Training Structure
 
 1. **Level 1: Getting Started (Trader - Basic)**
-   - Prerequisites
-   - System Setup
-   - Basic Operations
-   - Risk Management Fundamentals
+    - Prerequisites
+    - System Setup
+    - Basic Operations
+    - Risk Management Fundamentals
 
 2. **Level 2: Intermediate Trading**
-   - Advanced configuration
-   - Portfolio management
-   - Technical analysis implementation
+    - Advanced configuration
+    - Portfolio management
+    - Technical analysis implementation
 
 3. **Level 3: Advanced Operations**
-   - Custom strategy development
-   - Advanced risk metrics
-   - System optimization
+    - Custom strategy development
+    - Advanced risk metrics
+    - System optimization
 
 ### Training Resources
 
@@ -83,44 +84,48 @@ python3 server.py --port 8000
 1. **Python 3.10+**
 
 2. **Interactive Brokers TWS or IB Gateway**
-   - Download and install from [Interactive Brokers](https://www.interactivebrokers.com)
-   - Enable API connections in TWS/Gateway
-   - Configure the socket port (default: 7497)
-   - Enable auto-restart in TWS/Gateway
-   - Disable 'Read-Only API' in TWS/Gateway configuration
+    - Download and install from [Interactive Brokers](https://www.interactivebrokers.com)
+    - Enable API connections in TWS/Gateway
+    - Configure the socket port (default: 7497)
+    - Enable auto-restart in TWS/Gateway
+    - Disable 'Read-Only API' in TWS/Gateway configuration
 
 3. **Market Data Subscriptions**
-   - Appropriate market data subscriptions for your symbols
-   - Permissions for the markets you want to trade
+    - Appropriate market data subscriptions for your symbols
+    - Permissions for the markets you want to trade
 
 ## Quick Start
 
 1. Clone the repository:
+
 ```bash
 git clone https://github.com/zoharbabin/quantum-trader.git
 cd quantum-trader
 ```
 
 2. Create and activate a virtual environment:
+
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows use `venv\Scripts\activate`
 ```
 
 3. Install dependencies:
+
 ```bash
 pip install -r requirements.txt
 ```
 
 4. Configure the system:
-   - Review and modify `src/config/config.yaml` for your needs
-   - Key configurations include:
-     - API connection settings
-     - Risk management parameters
-     - Trading execution preferences
-     - Analysis thresholds
+    - Review and modify `src/config/config.yaml` for your needs
+    - Key configurations include:
+        - API connection settings
+        - Risk management parameters
+        - Trading execution preferences
+        - Analysis thresholds
 
 5. Start trading:
+
 ```bash
 python -m src.cli.cli_interface --symbols AAPL MSFT GOOGL --mode paper
 ```
@@ -134,6 +139,7 @@ Required arguments:
 The system is configured through `src/config/config.yaml`. Key sections include:
 
 ### API Configuration
+
 ```yaml
 api:
   tws_endpoint: "127.0.0.1"
@@ -141,6 +147,7 @@ api:
 ```
 
 ### Risk Management
+
 ```yaml
 risk_management:
   position_limits:
@@ -155,6 +162,7 @@ risk_management:
 ```
 
 ### Technical Analysis
+
 ```yaml
 technical_analysis:
   indicators:
@@ -170,6 +178,7 @@ technical_analysis:
 ```
 
 ### Trading Execution
+
 ```yaml
 execution:
   order_types: ["market", "limit"]
@@ -182,7 +191,7 @@ execution:
 
 The system provides detailed logging of all operations:
 
-```
+```log
 2024-11-10 18:24:20,523 - INFO - === Quantum Trader Starting ===
 2024-11-10 18:24:20,523 - INFO - Mode: paper
 2024-11-10 18:24:20,523 - INFO - Symbols: ['AAPL', 'MSFT', 'GOOGL']
@@ -195,22 +204,22 @@ The system provides detailed logging of all operations:
 ### Common Issues
 
 1. **Connection Problems**
-   - Verify TWS/Gateway is running
-   - Check API connection settings in TWS/Gateway
-   - Confirm port configuration matches config.yaml
-   - Ensure proper permissions in TWS/Gateway
+    - Verify TWS/Gateway is running
+    - Check API connection settings in TWS/Gateway
+    - Confirm port configuration matches config.yaml
+    - Ensure proper permissions in TWS/Gateway
 
 2. **Market Data Issues**
-   - Verify market data subscriptions
-   - Check symbol validity
-   - Confirm market hours
-   - Monitor data synchronization logs
+    - Verify market data subscriptions
+    - Check symbol validity
+    - Confirm market hours
+    - Monitor data synchronization logs
 
 3. **Trading Issues**
-   - Check risk limits in config.yaml
-   - Verify account permissions in TWS/Gateway
-   - Monitor order status in logs
-   - Review execution reports
+    - Check risk limits in config.yaml
+    - Verify account permissions in TWS/Gateway
+    - Monitor order status in logs
+    - Review execution reports
 
 ## Documentation
 
