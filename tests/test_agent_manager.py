@@ -12,7 +12,7 @@ class TestAgentManager(unittest.TestCase):
             }
         }
         # Patch the Agents class to mock its behavior
-        with patch('src.trading.agents.agent_manager.Swarm') as mock_agents:
+        with patch('src.trading.agents.agent_manager.Runner') as mock_agents:
             self.mock_agents = mock_agents.return_value
             self.agent_manager = AgentManager(self.config)
 

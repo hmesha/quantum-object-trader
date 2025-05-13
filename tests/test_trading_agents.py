@@ -35,9 +35,9 @@ class TestTradingAgents(unittest.TestCase):
             'timestamp': ['2024-01-01', '2024-01-02', '2024-01-03', '2024-01-04', '2024-01-05']
         }
 
-        # Create a mock Swarm instance
+        # Create a mock Agents instance
         self.mock_agents = MagicMock()
-        with patch('src.trading.trading_agents.Swarm', return_value=self.mock_agents):
+        with patch('src.trading.trading_agents.Runner', return_value=self.mock_agents):
             self.trading_agents = TradingAgents(self.config)
 
     def test_initialization(self):

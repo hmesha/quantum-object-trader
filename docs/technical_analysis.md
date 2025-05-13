@@ -2,7 +2,7 @@
 
 ## Overview
 
-The technical analysis component is implemented through a specialized Technical Analysis Agent in the Swarm framework. This agent analyzes market data using various technical indicators and provides trading signals to the system.
+The technical analysis component is implemented through a specialized Technical Analysis Agent in the Agents SDK framework. This agent analyzes market data using various technical indicators and provides trading signals to the system.
 
 ## Agent Implementation
 

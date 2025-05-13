@@ -7,7 +7,7 @@ class AgentManager:
 
     def __init__(self, config: dict):
         self.config = config
-        self.client = Swarm()
+        self.client = Runner()
         self._initialize_agents()
 
     def _initialize_agents(self) -> None:
