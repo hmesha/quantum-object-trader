@@ -40,7 +40,7 @@ class TestCLIInterface(unittest.TestCase):
         # Reset logging configuration
         for handler in logging.root.handlers[:]:
             logging.root.removeHandler(handler)
-            
+
         logger = setup_logging()
         self.assertIsInstance(logger, logging.Logger)
         self.assertEqual(logger.level, logging.INFO)
@@ -73,27 +73,27 @@ class TestCLIInterface(unittest.TestCase):
         self.assertTrue(any("TWS" in prereq for prereq in prerequisites))
 
     @patch('src.cli.cli_interface.IBClient')
-    @patch('src.cli.cli_interface.TradingSwarm')
-    def test_initialize_components_success(self, mock_trading_swarm, mock_ib_client):
+    @patch('src.cli.cli_interface.TradingAgents')
+    def test_initialize_components_success(self, mock_trading_agents, mock_ib_client):
         """Test successful component initialization"""
         # Configure mocks
         mock_ib_instance = mock_ib_client.return_value
         mock_ib_instance.connect_and_run.return_value = True
         mock_ib_instance.isConnected.return_value = True
-        
-        mock_swarm_instance = mock_trading_swarm.return_value
+
+        mock_agents_instance = mock_trading_agents.return_value
 
         # Test initialization
-        ib_client, trading_swarm = initialize_components(self.config, self.logger)
-        
+        ib_client, trading_agents = initialize_components(self.config, self.logger)
+
         # Verify calls
         mock_ib_client.assert_called_once_with(self.config)
-        mock_trading_swarm.assert_called_once_with(self.config)
+        mock_trading_agents.assert_called_once_with(self.config)
         mock_ib_instance.connect_and_run.assert_called_once()
-        
+
         # Verify returns
         self.assertEqual(ib_client, mock_ib_instance)
-        self.assertEqual(trading_swarm, mock_swarm_instance)
+        self.assertEqual(trading_agents, mock_agents_instance)
 
     @patch('src.cli.cli_interface.IBClient')
     def test_initialize_components_connection_failure(self, mock_ib_client):
@@ -105,7 +105,7 @@ class TestCLIInterface(unittest.TestCase):
         # Test initialization
         with self.assertRaises(Exception) as context:
             initialize_components(self.config, self.logger)
-        
+
         self.assertIn("Failed to connect to Interactive Brokers", str(context.exception))
 
     def test_process_market_data_success(self):
@@ -119,7 +119,7 @@ class TestCLIInterface(unittest.TestCase):
         }
 
         result = process_market_data(market_data, 'AAPL', self.logger)
-        
+
         self.assertIsInstance(result, pd.DataFrame)
         self.assertEqual(len(result), 3)
         self.assertTrue(all(col in result.columns for col in ['close', 'high', 'low', 'volume']))
@@ -136,7 +136,7 @@ class TestCLIInterface(unittest.TestCase):
 
         with self.assertRaises(ValueError) as context:
             process_market_data(market_data, 'AAPL', self.logger)
-        
+
         self.assertIn("Empty market data", str(context.exception))
 
     def test_process_market_data_missing_close(self):
@@ -150,7 +150,7 @@ class TestCLIInterface(unittest.TestCase):
 
         with self.assertRaises(ValueError) as context:
             process_market_data(market_data, 'AAPL', self.logger)
-        
+
         self.assertIn("No price data", str(context.exception))
 
     @patch('src.cli.cli_interface.initialize_components')
@@ -168,15 +168,15 @@ class TestCLIInterface(unittest.TestCase):
             'timestamp': ['2024-01-01']
         }
 
-        mock_trading_swarm = MagicMock()
-        mock_trading_swarm.analyze_trading_opportunity.return_value = {
+        mock_trading_agents = MagicMock()
+        mock_trading_agents.analyze_trading_opportunity.return_value = {
             'status': 'executed',
             'price': 100.0,
             'size': 10,
             'timestamp': '2024-01-01'
         }
 
-        mock_init_components.return_value = (mock_ib_client, mock_trading_swarm)
+        mock_init_components.return_value = (mock_ib_client, mock_trading_agents)
 
         # Test trading system
         start_trading_system(self.config, ['AAPL'], self.logger)
@@ -184,7 +184,7 @@ class TestCLIInterface(unittest.TestCase):
         # Verify calls
         mock_init_components.assert_called_once()
         mock_ib_client.get_market_data.assert_called_with('AAPL')
-        mock_trading_swarm.analyze_trading_opportunity.assert_called()
+        mock_trading_agents.analyze_trading_opportunity.assert_called()
         mock_ib_client.disconnect.assert_called_once()
 
     @patch('src.cli.cli_interface.setup_logging')

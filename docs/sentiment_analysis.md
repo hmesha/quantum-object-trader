@@ -2,7 +2,7 @@
 
 ## Overview
 
-The sentiment analysis component is implemented through a specialized Sentiment Analysis Agent in the Swarm framework. This agent analyzes market sentiment using various data sources and provides sentiment signals to the trading system.
+The sentiment analysis component is implemented through a specialized Sentiment Analysis Agent in the Agents SDK framework. This agent analyzes market sentiment using various data sources and provides sentiment signals to the trading system.
 
 ## Agent Implementation
 
@@ -232,24 +232,24 @@ agent_system:
 ## Usage Example
 
 ```python
-from src.trading.trading_agents import TradingSwarm
+from src.trading.trading_agents import TradingAgents
 
-# Initialize trading swarm
+# Initialize trading agents
 config = load_config()
-trading_swarm = TradingSwarm(config)
+trading_agents = TradingAgents(config)
 
 # Get sentiment analysis
 sentiment_message = {
     "role": "user",
     "content": "Analyze market sentiment for AAPL. Return response as JSON."
 }
-sentiment_response = trading_swarm.client.run(
-    agent=trading_swarm.sentiment_agent,
+sentiment_response = trading_agents.client.run(
+    agent=trading_agents.sentiment_agent,
     messages=[sentiment_message]
 )
 
 # Parse response
-sentiment_data = trading_swarm._parse_agent_response(sentiment_response)
+sentiment_data = trading_agents._parse_agent_response(sentiment_response)
 ```
 
 ## Monitoring

@@ -28,7 +28,7 @@ class TrainingApp {
     async initialize() {
         try {
             // Load course data
-            const response = await fetch('./courses/quantum-trading/course.json');
+            const response = await fetch('./courses/quantum-object-trading/course.json');
             this.courseData = await response.json();
 
             // Initialize UI components first
@@ -57,7 +57,7 @@ class TrainingApp {
         const navContainer = document.getElementById('level-nav');
         navContainer.innerHTML = this.courseData.levels
             .map((level, index) => `
-                <button class="nav-btn ${index === 0 ? 'active' : ''}" 
+                <button class="nav-btn ${index === 0 ? 'active' : ''}"
                         data-level="${index + 1}">
                     Level ${index + 1}
                 </button>
@@ -70,14 +70,14 @@ class TrainingApp {
                 <div class="level ${index === 0 ? 'active' : ''}" id="level${index + 1}">
                     <h2>${level.title}</h2>
                     <p class="duration">Duration: ${level.duration}</p>
-                    
+
                     ${level.prerequisites ? `
                         <section class="prerequisites">
                             <h3>Prerequisites</h3>
                             <ul>
                                 ${level.prerequisites.map(prereq => `
                                     <li>
-                                        <input type="checkbox" id="prereq-${level.id}-${level.prerequisites.indexOf(prereq)}" 
+                                        <input type="checkbox" id="prereq-${level.id}-${level.prerequisites.indexOf(prereq)}"
                                                onchange="window.app.handleProgress()">
                                         <label for="prereq-${level.id}-${level.prerequisites.indexOf(prereq)}">${prereq}</label>
                                     </li>

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This tutorial guides you through implementing comprehensive risk management controls in Quantum Trader, from individual position stop losses to portfolio-wide risk monitoring and automated alerts.
+This tutorial guides you through implementing comprehensive risk management controls in Quantum Object Trader, from individual position stop losses to portfolio-wide risk monitoring and automated alerts.
 
 ## Prerequisites
 

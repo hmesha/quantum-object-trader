@@ -1,8 +1,8 @@
-# Introduction to Quantum Trader
+# Introduction to Quantum Object Trader
 
-## What is Quantum Trader?
+## What is Quantum Object Trader?
 
-Quantum Trader is an advanced algorithmic trading platform that combines technical analysis, sentiment analysis, and risk management into a comprehensive trading system. It integrates with Interactive Brokers to provide automated trading capabilities while maintaining strict risk controls and portfolio management rules.
+Quantum Object Trader is an advanced algorithmic trading platform that combines technical analysis, sentiment analysis, and risk management into a comprehensive trading system. It integrates with Interactive Brokers to provide automated trading capabilities while maintaining strict risk controls and portfolio management rules.
 
 ## Key Features
 

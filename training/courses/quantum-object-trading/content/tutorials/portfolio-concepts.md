@@ -2,7 +2,7 @@
 
 ## Overview
 
-This tutorial covers essential portfolio management concepts for the Quantum Trader system.
+This tutorial covers essential portfolio management concepts for the Quantum Object Trader system.
 
 ## Key Concepts
 

@@ -1,7 +1,7 @@
 {
-    "id": "quantum-trading",
-    "title": "Quantum Trader Training Program",
-    "description": "A comprehensive training program for the Quantum Trader platform",
+    "id": "quantum-object-trading",
+    "title": "Quantum Object Trader Training Program",
+    "description": "A comprehensive training program for the Quantum Object Trader platform",
     "version": "1.0.0",
     "levels": [
         {
@@ -16,11 +16,11 @@
             "topics": [
                 {
                     "id": "introduction",
-                    "title": "Introduction to Quantum Trader",
+                    "title": "Introduction to Quantum Object Trader",
                     "type": "tutorial",
                     "content": "introduction.md",
                     "checkpoints": [
-                        "Understanding Quantum Trader's purpose",
+                        "Understanding Quantum Object Trader's purpose",
                         "Review of key features",
                         "Training program overview"
                     ]

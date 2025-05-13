@@ -4,7 +4,7 @@ import logging
 from datetime import datetime
 import pandas as pd
 import time
-from src.trading.trading_agents import TradingSwarm
+from src.trading.trading_agents import TradingAgents
 from src.api.ib_connector import IBClient
 
 def setup_logging():
@@ -12,18 +12,18 @@ def setup_logging():
     # Remove any existing handlers
     for handler in logging.root.handlers[:]:
         logging.root.removeHandler(handler)
-        
+
     # Create a new handler
     handler = logging.StreamHandler()
     handler.setFormatter(logging.Formatter(
         '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
     ))
-    
+
     # Get logger and configure it
     logger = logging.getLogger(__name__)
     logger.setLevel(logging.INFO)
     logger.addHandler(handler)
-    
+
     return logger
 
 def load_config():
@@ -57,11 +57,11 @@ def initialize_components(config, logger):
         # Initialize IB connection
         logger.info("Attempting to connect to Interactive Brokers...")
         ib_client = IBClient(config)
-        
+
         # Try to connect with timeout
         connection_timeout = 10  # seconds
         connection_start = time.time()
-        
+
         if not ib_client.connect_and_run():
             logger.error("Failed to establish connection to Interactive Brokers")
             logger.error("Please ensure all prerequisites are met:")
@@ -72,11 +72,11 @@ def initialize_components(config, logger):
         connection_time = time.time() - connection_start
         logger.info(f"Successfully connected to Interactive Brokers (took {connection_time:.2f} seconds)")
 
-        # Initialize trading swarm
-        trading_swarm = TradingSwarm(config)
-        logger.info("Trading swarm initialized")
+        # Initialize trading agents
+        trading_agents = TradingAgents(config)
+        logger.info("Trading agents initialized")
 
-        return ib_client, trading_swarm
+        return ib_client, trading_agents
 
     except Exception as e:
         logger.error(f"Failed to initialize components: {str(e)}")
@@ -95,10 +95,10 @@ def process_market_data(market_data, symbol, logger):
         # Check for missing or empty close prices
         if 'close' not in market_data or market_data['close'] is None:
             raise ValueError("No price data")
-            
+
         if not market_data['close'] or len(market_data['close']) == 0:
             raise ValueError("Empty market data")
-            
+
         if all(x is None for x in market_data['close']):
             raise ValueError("No price data")
 
@@ -109,7 +109,7 @@ def process_market_data(market_data, symbol, logger):
             'low': market_data.get('low', [None] * len(market_data['close'])),
             'volume': market_data.get('volume', [0] * len(market_data['close']))
         }
-        
+
         # Use timestamps if available, otherwise create timestamps
         timestamps = market_data.get('timestamp', [pd.Timestamp.now()] * len(market_data['close']))
         df = pd.DataFrame(data, index=pd.to_datetime(timestamps))
@@ -117,7 +117,7 @@ def process_market_data(market_data, symbol, logger):
         # Validate the data
         if df.empty:
             raise ValueError("Empty market data")
-        
+
         if df['close'].isnull().all():
             raise ValueError("No price data")
 
@@ -132,7 +132,7 @@ def start_trading_system(config, symbols, logger):
     ib_client = None
     try:
         # Initialize components
-        ib_client, trading_swarm = initialize_components(config, logger)
+        ib_client, trading_agents = initialize_components(config, logger)
 
         logger.info(f"Starting autonomous trading for symbols: {symbols}")
         logger.info("System Configuration:")
@@ -152,10 +152,10 @@ def start_trading_system(config, symbols, logger):
                 try:
                     # Fetch latest market data
                     market_data = ib_client.get_market_data(symbol)
-                    
+
                     # Process and validate market data
                     df = process_market_data(market_data, symbol, logger)
-                    
+
                     # Log market data summary
                     logger.info(f"Market data received for {symbol}:")
                     logger.info(f"- Latest Price: {df['close'].iloc[-1]:.2f}")
@@ -165,10 +165,10 @@ def start_trading_system(config, symbols, logger):
                         logger.info(f"- High: {df['high'].iloc[-1]:.2f}")
                     if not pd.isna(df['low'].iloc[-1]):
                         logger.info(f"- Low: {df['low'].iloc[-1]:.2f}")
-                    
+
                     # Analyze trading opportunity
-                    result = trading_swarm.analyze_trading_opportunity(symbol, df)
-                    
+                    result = trading_agents.analyze_trading_opportunity(symbol, df)
+
                     # Log analysis result
                     if result['status'] == 'executed':
                         logger.info(f"Trade executed for {symbol}:")
@@ -179,7 +179,7 @@ def start_trading_system(config, symbols, logger):
                         logger.info(f"Trade rejected for {symbol}: {result.get('reason', 'Unknown reason')}")
                     elif result['status'] == 'error':
                         logger.error(f"Error analyzing {symbol}: {result.get('reason', 'Unknown error')}")
-                    
+
                 except ValueError as ve:
                     logger.warning(f"Market data issue for {symbol}: {str(ve)}")
                     continue
@@ -206,22 +206,22 @@ def main():
                       help="List of symbols to trade (e.g., AAPL MSFT GOOGL)")
     parser.add_argument("--mode", choices=['live', 'paper'], default='paper',
                       help="Trading mode: 'live' or 'paper' trading")
-    
+
     args = parser.parse_args()
-    
+
     # Setup
     logger = setup_logging()
     config = load_config()
-    
+
     # Update config based on mode
     config['trading_mode'] = args.mode
-    
+
     # Log startup information
-    logger.info("=== Quantum Trader Starting ===")
+    logger.info("=== Quantum Object Trader Starting ===")
     logger.info(f"Mode: {args.mode}")
     logger.info(f"Symbols: {args.symbols}")
     logger.info(f"Start Time: {datetime.now()}")
-    
+
     # Start the trading system
     start_trading_system(config, args.symbols, logger)
 

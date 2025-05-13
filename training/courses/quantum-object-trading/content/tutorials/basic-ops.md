@@ -2,7 +2,7 @@
 
 ## Overview
 
-This tutorial will guide you through the basic operations of the Quantum Trader system.
+This tutorial will guide you through the basic operations of the Quantum Object Trader system.
 
 ## Prerequisites
 
@@ -19,11 +19,11 @@ This tutorial will guide you through the basic operations of the Quantum Trader 
 1. Open Interactive Brokers TWS or Gateway
 2. Log in to your account
 3. Ensure API connections are enabled in settings
-4. Verify the connection port (7496 for TWS, 4001 for Gateway)
+4. Verify the connection port (7497 for TWS, 4001 for Gateway)
 
 #### Start Paper Trading Mode
 
-1. Open your terminal and navigate to the quantum-trader directory
+1. Open your terminal and navigate to the quantum-object-trader directory
 2. Launch the system in paper trading mode:
 
 ```bash

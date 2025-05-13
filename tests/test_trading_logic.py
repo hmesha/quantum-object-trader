@@ -14,7 +14,7 @@ class TestTradingLogic(unittest.TestCase):
         self.config = {
             'api': {
                 'tws_endpoint': 'localhost',
-                'port': 7496
+                'port': 7497
             },
             'risk_management': {
                 'position_limits': {
@@ -33,7 +33,7 @@ class TestTradingLogic(unittest.TestCase):
                 }
             }
         }
-        
+
         # Create market data with realistic values
         self.market_data = {
             'close': [150.25, 151.50, 149.75, 152.00, 151.25],
@@ -41,13 +41,13 @@ class TestTradingLogic(unittest.TestCase):
             'low': [149.50, 150.75, 149.00, 151.25, 150.50],
             'volume': [1000000, 1200000, 800000, 1500000, 1100000]
         }
-        
+
         # Initialize mocks
         self.mock_api_connector = MagicMock(spec=IBClient)
         self.mock_risk_validator = MagicMock(spec=RiskValidator)
         self.mock_trade_executor = MagicMock(spec=TradeExecutor)
         self.mock_signal_analyzer = MagicMock(spec=SignalAnalyzer)
-        
+
         # Initialize trading logic with mocks
         with patch('src.trading.trading_logic.IBClient') as mock_ib, \
              patch('src.trading.trading_logic.RiskValidator') as mock_rv, \
@@ -82,10 +82,10 @@ class TestTradingLogic(unittest.TestCase):
                 'main': {'order_id': '12345', 'status': 'filled'}
             }
         }
-        
+
         # Execute
         result = self.trading_logic.execute_trade('AAPL', 'market', 10)
-        
+
         # Verify component interaction flow
         self.assertIsNotNone(result)
         self.assertEqual(result['status'], 'executed')
@@ -100,7 +100,7 @@ class TestTradingLogic(unittest.TestCase):
         result = self.trading_logic.execute_trade('AAPL', 'market', 0)
         self.assertIsNone(result)
         self.mock_trade_executor.execute_trade.assert_not_called()
-        
+
         # Test missing limit price
         result = self.trading_logic.execute_trade('AAPL', 'limit', 10)
         self.assertIsNone(result)
@@ -118,10 +118,10 @@ class TestTradingLogic(unittest.TestCase):
                 'stop_loss': 149.75
             }
         }
-        
+
         # Execute
         signal = self.trading_logic.evaluate_trading_opportunity('AAPL', self.market_data)
-        
+
         # Verify component interaction
         self.assertIsNotNone(signal)
         self.assertTrue(-1 <= signal <= 1)

@@ -2,7 +2,7 @@
 
 ## Overview
 
-This tutorial covers advanced portfolio management techniques and strategies for the Quantum Trader system.
+This tutorial covers advanced portfolio management techniques and strategies for the Quantum Object Trader system.
 
 ## Advanced Portfolio Diversification
 

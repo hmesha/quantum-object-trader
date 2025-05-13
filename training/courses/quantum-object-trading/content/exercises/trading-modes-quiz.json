@@ -1,7 +1,7 @@
 {
     "id": "trading-modes",
     "title": "Understanding Trading Modes Quiz",
-    "description": "Test your understanding of different trading modes in Quantum Trader",
+    "description": "Test your understanding of different trading modes in Quantum Object Trader",
     "questions": [
         {
             "id": "q1",

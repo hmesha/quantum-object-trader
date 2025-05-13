@@ -11,14 +11,14 @@ The Quantum Trader platform implements several key technical indicators to help 
 The system implements two types of moving averages:
 
 - **Simple Moving Average (SMA)**
-    - Calculates the arithmetic mean of prices over a specified period
-    - Default period: 20 days
-    - Use case: Identifying trend direction and potential support/resistance levels
+  - Calculates the arithmetic mean of prices over a specified period
+  - Default period: 20 days
+  - Use case: Identifying trend direction and potential support/resistance levels
 
 - **Exponential Moving Average (EMA)**
-    - Gives more weight to recent prices
-    - Default period: 20 days
-    - Use case: More responsive to recent price changes than SMA
+  - Gives more weight to recent prices
+  - Default period: 20 days
+  - Use case: More responsive to recent price changes than SMA
 
 ### 2. Relative Strength Index (RSI)
 
@@ -26,30 +26,30 @@ The system implements two types of moving averages:
 - Default period: 14 days
 - Scale: 0 to 100
 - Traditional interpretation:
-    - Above 70: Potentially overbought
-    - Below 30: Potentially oversold
+  - Above 70: Potentially overbought
+  - Below 30: Potentially oversold
 
 ### 3. MACD (Moving Average Convergence Divergence)
 
 - Components:
-    - Fast EMA (default: 12 periods)
-    - Slow EMA (default: 26 periods)
-    - Signal line (default: 9-period EMA of MACD)
+  - Fast EMA (default: 12 periods)
+  - Slow EMA (default: 26 periods)
+  - Signal line (default: 9-period EMA of MACD)
 - Use cases:
-    - Trend direction identification
-    - Momentum measurement
-    - Signal generation through crossovers
+  - Trend direction identification
+  - Momentum measurement
+  - Signal generation through crossovers
 
 ### 4. Bollinger Bands
 
 - Three bands showing price volatility:
-    - Middle band: 20-period SMA
-    - Upper band: SMA + (2 × standard deviation)
-    - Lower band: SMA - (2 × standard deviation)
+  - Middle band: 20-period SMA
+  - Upper band: SMA + (2 × standard deviation)
+  - Lower band: SMA - (2 × standard deviation)
 - Use cases:
-    - Volatility measurement
-    - Potential breakout identification
-    - Overbought/oversold conditions
+  - Volatility measurement
+  - Potential breakout identification
+  - Overbought/oversold conditions
 
 ## Configuration Guide
 
@@ -156,9 +156,9 @@ def check_mean_reversion_signals(current_price, lower_band, upper_band, rsi_valu
 
 - Test different parameter settings in paper trading
 - Adjust parameters based on:
-    - Asset volatility
-    - Trading timeframe
-    - Market conditions
+  - Asset volatility
+  - Trading timeframe
+  - Market conditions
 
 ### 3. Risk Management
 

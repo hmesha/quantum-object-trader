@@ -2,7 +2,7 @@
 
 ## Overview
 
-The CLI interface provides a command-line tool for interacting with the Quantum Trader system. It handles market data processing, trading decisions, and system monitoring through a multi-agent architecture.
+The CLI interface provides a command-line tool for interacting with the Quantum Object Trader system. It handles market data processing, trading decisions, and system monitoring through a multi-agent architecture.
 
 ## Command Structure
 
@@ -39,7 +39,7 @@ The system will:
 
 1. Check all prerequisites
 2. Connect to Interactive Brokers
-3. Initialize the trading swarm
+3. Initialize the trading agents
 4. Begin market data processing
 5. Start autonomous trading operations
 
@@ -85,7 +85,7 @@ The system provides detailed logging of:
 Example output:
 
 ```log
-2024-11-10 18:24:20,523 - __main__ - INFO - === Quantum Trader Starting ===
+2024-11-10 18:24:20,523 - __main__ - INFO - === Quantum Object Trader Starting ===
 2024-11-10 18:24:20,523 - __main__ - INFO - Mode: paper
 2024-11-10 18:24:20,523 - __main__ - INFO - Symbols: ['AAPL', 'MSFT', 'GOOGL']
 ...

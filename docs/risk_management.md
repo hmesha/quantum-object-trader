@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Quantum Trader risk management system provides comprehensive trade validation and risk control through multiple layers of checks and balances. The system ensures trades comply with position limits, portfolio exposure rules, stop loss requirements, and risk/reward ratios.
+The Quantum Object Trader risk management system provides comprehensive trade validation and risk control through multiple layers of checks and balances. The system ensures trades comply with position limits, portfolio exposure rules, stop loss requirements, and risk/reward ratios.
 
 ## Components
 

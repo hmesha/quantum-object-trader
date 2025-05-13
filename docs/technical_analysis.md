@@ -254,11 +254,11 @@ agent_system:
 ## Usage Example
 
 ```python
-from src.trading.trading_agents import TradingSwarm
+from src.trading.trading_agents import TradingAgents
 
-# Initialize trading swarm
+# Initialize trading agents
 config = load_config()
-trading_swarm = TradingSwarm(config)
+trading_agents = TradingAgents(config)
 
 # Prepare market data
 market_data_dict = {
@@ -274,13 +274,13 @@ technical_message = {
     "role": "user",
     "content": f"Analyze technical indicators for AAPL. Market data: {json.dumps(market_data_dict)}. Return response as JSON."
 }
-technical_response = trading_swarm.client.run(
-    agent=trading_swarm.technical_agent,
+technical_response = trading_agents.client.run(
+    agent=trading_agents.technical_agent,
     messages=[technical_message]
 )
 
 # Parse response
-technical_data = trading_swarm._parse_agent_response(technical_response)
+technical_data = trading_agents._parse_agent_response(technical_response)
 ```
 
 ## Monitoring

@@ -1,10 +1,10 @@
-# Quantum Trader
+# Quantum Object Trader
 
 🤖 An intelligent autonomous trading system using a multi-agent architecture for algorithmic trading via Interactive Brokers
 
 ## Overview
 
-Quantum Trader is a sophisticated algorithmic trading system that leverages Interactive Brokers' API to make trading decisions. The system uses a multi-agent approach where specialized components collaborate to analyze market data, assess risks, and execute trades.
+Quantum Object Trader is a sophisticated algorithmic trading system that leverages Interactive Brokers' API to make trading decisions. The system uses a multi-agent approach where specialized components collaborate to analyze market data, assess risks, and execute trades.
 
 ## Key Features
 
@@ -38,18 +38,18 @@ Quantum Trader is a sophisticated algorithmic trading system that leverages Inte
 
 ## Training Program
 
-A comprehensive training program is included to help you understand and effectively use Quantum Trader.
+A comprehensive training program is included to help you understand and effectively use Quantum Object Trader.
 
 ### Running the Training Program
 
 1. Start the training server:
 
-```bash
-cd training
-python3 server.py  # Runs on default port 7555
-# Or specify a custom port:
-python3 server.py --port 8000
-```
+    ```bash
+    cd training
+    python3 server.py  # Runs on default port 7555
+    # Or specify a custom port:
+    python3 server.py --port 8000
+    ```
 
 2. Open your web browser and visit: `http://localhost:7555` (or your custom port if specified)
 
@@ -98,23 +98,23 @@ python3 server.py --port 8000
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/zoharbabin/quantum-trader.git
-cd quantum-trader
-```
+    ```bash
+    git clone https://github.com/hmesha/quantum-object-trader.git
+    cd quantum-object-trader
+    ```
 
 2. Create and activate a virtual environment:
 
-```bash
-python -m venv venv
-source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-```
+    ```bash
+    python -m venv venv
+    source venv/bin/activate  # On Windows use `venv\Scripts\activate`
+    ```
 
 3. Install dependencies:
 
-```bash
-pip install -r requirements.txt
-```
+    ```bash
+    pip install -r requirements.txt
+    ```
 
 4. Configure the system:
     - Review and modify `src/config/config.yaml` for your needs
@@ -126,11 +126,12 @@ pip install -r requirements.txt
 
 5. Start trading:
 
-```bash
-python -m src.cli.cli_interface --symbols AAPL MSFT GOOGL --mode paper
-```
+    ```bash
+    python -m src.cli.cli_interface --symbols AAPL MSFT GOOGL --mode paper
+    ```
 
 Required arguments:
+
 - `--symbols`: List of stock symbols to trade
 - `--mode`: Trading mode ('paper' or 'live', default: paper)
 
@@ -192,7 +193,7 @@ execution:
 The system provides detailed logging of all operations:
 
 ```log
-2024-11-10 18:24:20,523 - INFO - === Quantum Trader Starting ===
+2024-11-10 18:24:20,523 - INFO - === Quantum Object Trader Starting ===
 2024-11-10 18:24:20,523 - INFO - Mode: paper
 2024-11-10 18:24:20,523 - INFO - Symbols: ['AAPL', 'MSFT', 'GOOGL']
 2024-11-10 18:24:20,524 - INFO - Checking Interactive Brokers prerequisites...

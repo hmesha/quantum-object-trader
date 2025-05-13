@@ -268,14 +268,14 @@ The trading logic integrates with:
 ## Usage Example
 
 ```python
-from src.trading.trading_agents import TradingSwarm
+from src.trading.trading_agents import TradingAgents
 
-# Initialize trading swarm
+# Initialize trading agents
 config = load_config()
-trading_swarm = TradingSwarm(config)
+trading_agents = TradingAgents(config)
 
 # Process trading opportunity
-result = trading_swarm.analyze_trading_opportunity(
+result = trading_agents.analyze_trading_opportunity(
     symbol="AAPL",
     market_data=market_data
 )

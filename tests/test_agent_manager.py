@@ -8,12 +8,12 @@ class TestAgentManager(unittest.TestCase):
         self.config = {
             'api': {
                 'tws_endpoint': 'localhost',
-                'port': 7496
+                'port': 7497
             }
         }
-        # Patch the Swarm class to mock its behavior
-        with patch('src.trading.agents.agent_manager.Swarm') as mock_swarm:
-            self.mock_swarm = mock_swarm.return_value
+        # Patch the Agents class to mock its behavior
+        with patch('src.trading.agents.agent_manager.Swarm') as mock_agents:
+            self.mock_agents = mock_agents.return_value
             self.agent_manager = AgentManager(self.config)
 
     def test_agent_initialization(self):
@@ -32,7 +32,7 @@ class TestAgentManager(unittest.TestCase):
         # Test valid agent retrieval
         agent = self.agent_manager.get_agent('technical')
         self.assertIsNotNone(agent)
-        
+
         # Test invalid agent type
         agent = self.agent_manager.get_agent('invalid')
         self.assertIsNone(agent)
@@ -45,16 +45,16 @@ class TestAgentManager(unittest.TestCase):
                 {"content": '{"signal": "buy", "confidence": 0.8}'}
             ]
         }
-        self.mock_swarm.run.return_value = MagicMock(**expected_response)
-        
+        self.mock_agents.run.return_value = MagicMock(**expected_response)
+
         # Run agent
         messages = [{'role': 'user', 'content': 'Analyze market data'}]
         response = self.agent_manager.run_agent('technical', messages)
-        
+
         # Verify response and interaction
         self.assertIsNotNone(response)
         self.assertEqual(response.messages[0]['content'], expected_response["messages"][0]["content"])
-        self.mock_swarm.run.assert_called_once_with(agent=self.agent_manager.agents['technical'], messages=messages)
+        self.mock_agents.run.assert_called_once_with(agent=self.agent_manager.agents['technical'], messages=messages)
 
     def test_run_agent_error_handling(self):
         """Test agent execution error handling"""
@@ -62,13 +62,13 @@ class TestAgentManager(unittest.TestCase):
         messages = [{'role': 'user', 'content': 'Analyze market data'}]
         response = self.agent_manager.run_agent('invalid', messages)
         self.assertIsNone(response)
-        self.mock_swarm.run.assert_not_called()
-        
+        self.mock_agents.run.assert_not_called()
+
         # Test with execution error
-        self.mock_swarm.run.side_effect = Exception('Agent error')
+        self.mock_agents.run.side_effect = Exception('Agent error')
         response = self.agent_manager.run_agent('technical', messages)
         self.assertIsNone(response)
-        self.mock_swarm.run.assert_called_once_with(agent=self.agent_manager.agents['technical'], messages=messages)
+        self.mock_agents.run.assert_called_once_with(agent=self.agent_manager.agents['technical'], messages=messages)
 
 if __name__ == '__main__':
     unittest.main()

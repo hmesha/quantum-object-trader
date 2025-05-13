@@ -24,24 +24,24 @@ class Handler(SimpleHTTPRequestHandler):
 def run_server(port):
     # Change to the training directory
     os.chdir(os.path.dirname(os.path.abspath(__file__)))
-    
+
     # Create IPv6 socket that also supports IPv4
     sock = socket.socket(socket.AF_INET6, socket.SOCK_STREAM)
     sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
     sock.setsockopt(socket.IPPROTO_IPV6, socket.IPV6_V6ONLY, 0)
-    
+
     # Create server
     server = HTTPServer(('::', port), Handler, bind_and_activate=False)
     server.socket = sock
     server.server_bind()
     server.server_activate()
-    
+
     print(f"Server running on:")
     print(f"http://localhost:{port}")
     print(f"http://127.0.0.1:{port}")
     print(f"http://[::1]:{port}")
     print("\nPress Ctrl+C to stop the server")
-    
+
     try:
         server.serve_forever()
     except KeyboardInterrupt:
@@ -49,7 +49,7 @@ def run_server(port):
         server.server_close()
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser(description='Run the Quantum Trader training server')
+    parser = argparse.ArgumentParser(description='Run the Quantum Object Trader training server')
     parser.add_argument('--port', type=int, default=7555,
                       help='Port to run the server on (default: 7555)')
     args = parser.parse_args()

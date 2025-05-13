@@ -6,32 +6,32 @@ export async function showTutorial(id) {
     console.log(`Showing tutorial/quiz for ${id}`);
     const content = document.getElementById(id);
     const allTutorials = document.querySelectorAll('.tutorial-content');
-    
+
     // Hide all other tutorials
     allTutorials.forEach(tutorial => {
         if (tutorial.id !== id) {
             tutorial.style.display = 'none';
         }
     });
-    
+
     // If content is not already loaded, fetch it
     if (content.dataset.loaded !== 'true') {
         try {
             console.log('Fetching course data...');
             // Fetch course data to get content info
-            const courseResponse = await fetch('./courses/quantum-trading/course.json');
+            const courseResponse = await fetch('./courses/quantum-object-trading/course.json');
             if (!courseResponse.ok) {
                 throw new Error(`HTTP error! status: ${courseResponse.status}`);
             }
             const courseData = await courseResponse.json();
-            
+
             // Find the topic in course data
             let topic;
             for (const level of courseData.levels) {
                 topic = level.topics.find(t => t.id === id);
                 if (topic) break;
             }
-            
+
             if (!topic) {
                 throw new Error(`Topic ${id} not found in course data`);
             }
@@ -39,9 +39,9 @@ export async function showTutorial(id) {
             console.log('Found topic:', topic);
 
             // Determine content path based on type and content field from course.json
-            const contentPath = `./courses/quantum-trading/content/${topic.type === 'tutorial' ? 'tutorials' : 'exercises'}/${topic.content}`;
+            const contentPath = `./courses/quantum-object-trading/content/${topic.type === 'tutorial' ? 'tutorials' : 'exercises'}/${topic.content}`;
             console.log('Loading content from:', contentPath);
-            
+
             // Fetch content
             const response = await fetch(contentPath);
             if (!response.ok) {
@@ -49,7 +49,7 @@ export async function showTutorial(id) {
             }
             const data = await response.text();
             console.log('Content loaded successfully');
-            
+
             // For tutorials, render markdown
             if (topic.type === 'tutorial') {
                 const htmlContent = parseMarkdown(data);
@@ -69,9 +69,9 @@ export async function showTutorial(id) {
                                     <p>${q.question}</p>
                                     ${q.options.map(opt => `
                                         <div class="option">
-                                            <input type="radio" 
-                                                   name="q${q.id}" 
-                                                   id="${q.id}${opt.id}" 
+                                            <input type="radio"
+                                                   name="q${q.id}"
+                                                   id="${q.id}${opt.id}"
                                                    data-question="${q.id}"
                                                    data-answer="${opt.id}">
                                             <label for="${q.id}${opt.id}">${opt.text}</label>
@@ -103,14 +103,14 @@ export async function showTutorial(id) {
                     `;
                 }
             }
-            
+
             content.dataset.loaded = 'true';
         } catch (error) {
             console.error(`Failed to load content for ${id}:`, error);
             content.innerHTML = '<p class="error">Failed to load content. Please try again.</p>';
         }
     }
-    
+
     // Toggle visibility
     content.style.display = content.style.display === 'block' ? 'none' : 'block';
 }

@@ -2,7 +2,7 @@
 
 ## Overview
 
-In this tutorial, you'll learn how to set up and configure the sentiment analysis component of Quantum Trader. This powerful feature analyzes market sentiment from news and social media sources to enhance your trading decisions.
+In this tutorial, you'll learn how to set up and configure the sentiment analysis component of Quantum Object Trader. This powerful feature analyzes market sentiment from news and social media sources to enhance your trading decisions.
 
 ## Prerequisites
 
@@ -33,7 +33,7 @@ Key parameters:
 
 ### Validation Steps
 
-1. Start Quantum Trader in debug mode
+1. Start Quantum Object Trader in debug mode
 2. Check the logs for successful news data fetching
 3. Verify that sentiment scores are being generated
 
@@ -81,19 +81,19 @@ sentiment_analysis:
 2. Run the built-in accuracy test:
 
 ```python
-from src.trading.trading_agents import TradingSwarm
+from src.trading.trading_agents import TradingAgents
 
-# Initialize trading swarm
+# Initialize trading agents
 config = load_config()
-trading_swarm = TradingSwarm(config)
+trading_agents = TradingAgents(config)
 
 # Test sentiment analysis
 sentiment_message = {
     "role": "user",
     "content": "Analyze market sentiment for AAPL. Return response as JSON."
 }
-sentiment_response = trading_swarm.client.run(
-    agent=trading_swarm.sentiment_agent,
+sentiment_response = trading_agents.client.run(
+    agent=trading_agents.sentiment_agent,
     messages=[sentiment_message]
 )
 ```
