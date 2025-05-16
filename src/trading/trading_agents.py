@@ -241,7 +241,7 @@ class TradingAgents:
                 "role": "user",
                 "content": f"Analyze technical indicators for {symbol}"
             }]
-            technical_response = self.client.run(agent=self.technical_agent, messages=technical_message)
+            technical_response = self.client.run(starting_agent=self.technical_agent, input=technical_message)
             technical_data = self._parse_agent_response(technical_response)
 
             if "error" in technical_data:
@@ -255,7 +255,7 @@ class TradingAgents:
                 "role": "user",
                 "content": f"Analyze market sentiment for {symbol}"
             }]
-            sentiment_response = self.client.run(agent=self.sentiment_agent, messages=sentiment_message)
+            sentiment_response = self.client.run(starting_agent=self.sentiment_agent, input=sentiment_message)
             sentiment_data = self._parse_agent_response(sentiment_response)
 
             # Prepare trade parameters
@@ -275,7 +275,7 @@ class TradingAgents:
                     "sentiment": sentiment_data
                 }
             }]
-            risk_response = self.client.run(agent=self.risk_agent, messages=risk_message)
+            risk_response = self.client.run(starting_agent=self.risk_agent, input=risk_message)
             risk_data = self._parse_agent_response(risk_response)
 
             # Check risk approval
@@ -294,7 +294,7 @@ class TradingAgents:
                     "trade": trade_params
                 }
             }]
-            execution_response = self.client.run(agent=self.execution_agent, messages=execution_message)
+            execution_response = self.client.run(starting_agent=self.execution_agent, input=execution_message)
             execution_data = self._parse_agent_response(execution_response)
 
             return execution_data
